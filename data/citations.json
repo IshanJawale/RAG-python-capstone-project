@@ -1,0 +1,276 @@
+{
+    "A Survey on RAG Meeting LLMs Towards Retrieval-Augmented Large Language Models": {
+        "citation_count": 726,
+        "year": 2024,
+        "matched_title": "A Survey on RAG Meeting LLMs: Towards Retrieval-Augmented Large Language Models",
+        "openalex_id": "https://openalex.org/W4401857375",
+        "doi": "https://doi.org/10.1145/3637528.3671470",
+        "title_similarity": 1.0,
+        "source": "OpenAlex",
+        "match_status": "matched"
+    },
+    "A Survey on Retrieval-Augmented Text Generation for Large Language Models": {
+        "citation_count": 55,
+        "year": 2026,
+        "matched_title": "A Survey on Retrieval-Augmented Text Generation for Large Language Models",
+        "openalex_id": "https://openalex.org/W4394947112",
+        "doi": "https://doi.org/10.1145/3805774",
+        "title_similarity": 1.0,
+        "source": "OpenAlex",
+        "match_status": "matched"
+    },
+    "ARES An Automated Evaluation Framework for Retrieval-Augmented Generation Systems": {
+        "citation_count": 122,
+        "year": 2024,
+        "matched_title": "ARES: An Automated Evaluation Framework for Retrieval-Augmented Generation Systems",
+        "openalex_id": "https://openalex.org/W4401042808",
+        "doi": "https://doi.org/10.18653/v1/2024.naacl-long.20",
+        "title_similarity": 1.0,
+        "source": "OpenAlex",
+        "match_status": "matched"
+    },
+    "Atlas Few-shot Learning with Retrieval Augmented Language Models": {
+        "citation_count": 201,
+        "year": 2022,
+        "matched_title": "Atlas: Few-shot Learning with Retrieval Augmented Language Models",
+        "openalex_id": "https://openalex.org/W4301243929",
+        "doi": "https://doi.org/10.48550/arxiv.2208.03299",
+        "title_similarity": 1.0,
+        "source": "OpenAlex",
+        "match_status": "matched"
+    },
+    "Attention Is All You Need": {
+        "citation_count": 7290,
+        "year": 2025,
+        "matched_title": "Attention Is All You Need",
+        "openalex_id": "https://openalex.org/W2626778328",
+        "doi": "https://doi.org/10.65215/2q58a426",
+        "title_similarity": 1.0,
+        "source": "OpenAlex",
+        "match_status": "matched"
+    },
+    "Chain-of-Thought Prompting Elicits Reasoning in Large Language Models": {
+        "citation_count": 1856,
+        "year": 2022,
+        "matched_title": "Chain-Of-Thought Prompting Elicits Reasoning in Large Language Models",
+        "openalex_id": "https://openalex.org/W7133224126",
+        "doi": "https://doi.org/10.52202/068431-1800",
+        "title_similarity": 1.0,
+        "source": "OpenAlex",
+        "match_status": "matched"
+    },
+    "Chain-of-Verification Reduces Hallucination in Large Language Models": {
+        "citation_count": 223,
+        "year": 2024,
+        "matched_title": "Chain-of-Verification Reduces Hallucination in Large Language Models",
+        "openalex_id": "https://openalex.org/W4402670429",
+        "doi": "https://doi.org/10.18653/v1/2024.findings-acl.212",
+        "title_similarity": 1.0,
+        "source": "OpenAlex",
+        "match_status": "matched"
+    },
+    "Corrective Retrieval Augmented Generation": {
+        "citation_count": 111,
+        "year": 2025,
+        "matched_title": "Corrective Retrieval Augmented Generation",
+        "openalex_id": "https://openalex.org/W4410705984",
+        "doi": "https://doi.org/10.2139/ssrn.5267341",
+        "title_similarity": 1.0,
+        "source": "OpenAlex",
+        "match_status": "matched"
+    },
+    "Dense Passage Retrieval for Open-Domain Question Answering": {
+        "citation_count": 142,
+        "year": 2020,
+        "matched_title": "Dense Passage Retrieval for Open-Domain Question Answering",
+        "openalex_id": "https://openalex.org/W3015883388",
+        "doi": "https://doi.org/10.18653/v1/2020.emnlp-main.550",
+        "title_similarity": 1.0,
+        "source": "OpenAlex",
+        "match_status": "matched"
+    },
+    "From Local to Global A Graph RAG Approach to Query-Focused Summarization": {
+        "citation_count": 116,
+        "year": 2024,
+        "matched_title": "From Local to Global: A Graph RAG Approach to Query-Focused Summarization",
+        "source": "OpenAlex / secondary citation index",
+        "match_status": "matched"
+    },
+    "Improving Language Models by Retrieving from Trillions of Tokens": {
+        "citation_count": 300,
+        "year": 2021,
+        "matched_title": "Improving language models by retrieving from trillions of tokens",
+        "openalex_id": "https://openalex.org/W4226082499",
+        "doi": "https://doi.org/10.48550/arxiv.2112.04426",
+        "title_similarity": 1.0,
+        "source": "OpenAlex",
+        "match_status": "matched"
+    },
+    "Language Models are Few-Shot Learners": {
+        "citation_count": 3020,
+        "year": 2020,
+        "matched_title": "Language Models are Few-Shot Learners",
+        "openalex_id": "https://openalex.org/W3030163527",
+        "doi": "https://doi.org/10.48550/arxiv.2005.14165",
+        "title_similarity": 1.0,
+        "source": "OpenAlex",
+        "match_status": "matched"
+    },
+    "Leveraging Passage Retrieval with Generative Models for Open Domain Question Answering": {
+        "citation_count": 99,
+        "year": 2021,
+        "matched_title": "Leveraging Passage Retrieval with Generative Models for Open Domain Question Answering",
+        "openalex_id": "https://openalex.org/W3039017601",
+        "doi": "https://doi.org/10.18653/v1/2021.eacl-main.74",
+        "title_similarity": 1.0,
+        "source": "OpenAlex",
+        "match_status": "matched"
+    },
+    "LLaMA Open and Efficient Foundation Language Models": {
+        "citation_count": 3969,
+        "year": 2023,
+        "matched_title": "LLaMA: Open and Efficient Foundation Language Models",
+        "openalex_id": "https://openalex.org/W4322718191",
+        "doi": "https://doi.org/10.48550/arxiv.2302.13971",
+        "title_similarity": 1.0,
+        "source": "OpenAlex",
+        "match_status": "matched"
+    },
+    "LongRAG A Dual-Perspective Retrieval-Augmented Generation Framework for Long-Context Question Answering": {
+        "citation_count": 28,
+        "year": 2024,
+        "matched_title": "LongRAG: A Dual-Perspective Retrieval-Augmented Generation Paradigm for Long-Context Question Answering",
+        "openalex_id": "https://openalex.org/W4404781754",
+        "doi": "https://doi.org/10.18653/v1/2024.emnlp-main.1259",
+        "title_similarity": 0.9463414634146341,
+        "source": "OpenAlex",
+        "match_status": "matched"
+    },
+    "LoRA Low-Rank Adaptation of Large Language Models": {
+        "citation_count": null,
+        "year": 2023,
+        "matched_title": "QA-LoRA: Quantization-Aware Low-Rank Adaptation of Large Language Models",
+        "openalex_id": "https://openalex.org/W4387156572",
+        "doi": "https://doi.org/10.48550/arxiv.2309.14717",
+        "title_similarity": 0.8166666666666667,
+        "source": "OpenAlex",
+        "match_status": "low_confidence_match"
+    },
+    "Lost in the Middle How Language Models Use Long Contexts": {
+        "citation_count": 1243,
+        "year": 2024,
+        "matched_title": "Lost in the Middle: How Language Models Use Long Contexts",
+        "openalex_id": "https://openalex.org/W4391876619",
+        "doi": "https://doi.org/10.1162/tacl_a_00638",
+        "title_similarity": 1.0,
+        "source": "OpenAlex",
+        "match_status": "matched"
+    },
+    "Precise Zero-Shot Dense Retrieval without Relevance Labels": {
+        "citation_count": 303,
+        "year": 2023,
+        "matched_title": "Precise Zero-Shot Dense Retrieval without Relevance Labels",
+        "openalex_id": "https://openalex.org/W4385565351",
+        "doi": "https://doi.org/10.18653/v1/2023.acl-long.99",
+        "title_similarity": 1.0,
+        "source": "OpenAlex",
+        "match_status": "matched"
+    },
+    "RAGAS Automated Evaluation of Retrieval Augmented Generation": {
+        "citation_count": 440,
+        "year": 2024,
+        "matched_title": "RAGAs: Automated Evaluation of Retrieval Augmented Generation",
+        "openalex_id": "https://openalex.org/W4411630045",
+        "doi": "https://doi.org/10.18653/v1/2024.eacl-demo.16",
+        "title_similarity": 1.0,
+        "source": "OpenAlex",
+        "match_status": "matched"
+    },
+    "RAGChecker A Fine-grained Framework for Diagnosing Retrieval-Augmented Generation": {
+        "citation_count": 15,
+        "year": 2024,
+        "matched_title": "RAGChecker: A Fine-grained Framework for Diagnosing Retrieval-Augmented Generation",
+        "openalex_id": "https://openalex.org/W4415798436",
+        "doi": "https://doi.org/10.52202/079017-0692",
+        "title_similarity": 1.0,
+        "source": "OpenAlex",
+        "match_status": "matched"
+    },
+    "RAPTOR Recursive Abstractive Processing for Tree-Organized Retrieval": {
+        "citation_count": 27,
+        "year": 2024,
+        "matched_title": "RAPTOR: Recursive Abstractive Processing for Tree-Organized Retrieval",
+        "openalex_id": "https://openalex.org/W4391463108",
+        "doi": "https://doi.org/10.48550/arxiv.2401.18059",
+        "title_similarity": 1.0,
+        "source": "OpenAlex",
+        "match_status": "matched"
+    },
+    "ReAct Synergizing Reasoning and Acting in Language Models": {
+        "citation_count": 6455,
+        "year": 2023,
+        "matched_title": "ReAct: Synergizing Reasoning and Acting in Language Models",
+        "source": "Semantic Scholar",
+        "match_status": "matched"
+    },
+    "REALM Retrieval-Augmented Language Model Pre-Training": {
+        "citation_count": 521,
+        "year": 2020,
+        "matched_title": "REALM: Retrieval-Augmented Language Model Pre-Training",
+        "openalex_id": "https://openalex.org/W3007672467",
+        "doi": "https://doi.org/10.48550/arxiv.2002.08909",
+        "title_similarity": 1.0,
+        "source": "OpenAlex",
+        "match_status": "matched"
+    },
+    "REPLUG Retrieval-Augmented Black-Box Language Models": {
+        "citation_count": 186,
+        "year": 2024,
+        "matched_title": "REPLUG: Retrieval-Augmented Black-Box Language Models",
+        "openalex_id": "https://openalex.org/W4401042773",
+        "doi": "https://doi.org/10.18653/v1/2024.naacl-long.463",
+        "title_similarity": 1.0,
+        "source": "OpenAlex",
+        "match_status": "matched"
+    },
+    "Retrieval-Augmented Generation A Comprehensive Survey of Architectures, Enhancements, and Robustness Frontiers": {
+        "citation_count": 7,
+        "year": 2025,
+        "matched_title": "Retrieval-Augmented Generation: A Comprehensive Survey of Architectures, Enhancements, and Robustness Frontiers",
+        "openalex_id": "https://openalex.org/W4414888095",
+        "doi": "https://doi.org/10.48550/arxiv.2506.00054",
+        "title_similarity": 1.0,
+        "source": "OpenAlex",
+        "match_status": "matched"
+    },
+    "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks": {
+        "citation_count": 18,
+        "year": 2020,
+        "matched_title": "Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks",
+        "openalex_id": "https://openalex.org/W3098425262",
+        "doi": null,
+        "title_similarity": 1.0,
+        "source": "OpenAlex",
+        "match_status": "matched"
+    },
+    "Retrieval-Augmented Generation for Large Language Models A Survey": {
+        "citation_count": 730,
+        "year": 2023,
+        "matched_title": "Retrieval-Augmented Generation for Large Language Models: A Survey",
+        "openalex_id": "https://openalex.org/W4389984066",
+        "doi": "https://doi.org/10.48550/arxiv.2312.10997",
+        "title_similarity": 1.0,
+        "source": "OpenAlex",
+        "match_status": "matched"
+    },
+    "Self-RAG Learning to Retrieve, Generate, and Critique through Self-Reflection": {
+        "citation_count": null,
+        "year": 2024,
+        "matched_title": "Adaptive-RAG: Learning to Adapt Retrieval-Augmented Large Language Models through Question Complexity",
+        "openalex_id": "https://openalex.org/W4401042753",
+        "doi": "https://doi.org/10.18653/v1/2024.naacl-long.389",
+        "title_similarity": 0.5028571428571429,
+        "source": "OpenAlex",
+        "match_status": "low_confidence_match"
+    }
+}

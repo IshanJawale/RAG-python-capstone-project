@@ -1,0 +1,760 @@
+
+
+==========================================================================================
+ADAPTIVE MULTIMODAL RAG - TEST SUITE
+==========================================================================================
+
+Output is being saved to: test_output.txt
+
+Loading corpus...
+Chunks loaded     : 1070
+Embeddings loaded : (1070, 384)
+Citation records  : 28
+
+Loading retriever...
+Loading embedding model...
+
+Retriever ready.
+
+
+==========================================================================================
+RUNNING 10 TEST QUESTIONS
+==========================================================================================
+
+
+##########################################################################################
+TEST 1
+##########################################################################################
+
+QUESTION:
+What is Retrieval-Augmented Generation (RAG), and why is it useful for large language models?
+
+
+------------------------------------------------------------------------------------------
+TOP RETRIEVED SOURCES
+------------------------------------------------------------------------------------------
+
+SOURCE 1
+Paper              : A Survey on RAG Meeting LLMs Towards Retrieval-Augmented Large Language Models
+Page               : 4
+Semantic similarity: 0.8051
+Citation count     : 726
+Credibility score  : 0.7408
+Preview            : Conference’17, July 2017, Washington, DC, USA Wenqi Fan, Yujuan Ding, Liangbo Ning, Shijie Wang, Hengyun Li, Dawei Yin, Tat-Seng Chua, and Qing Li Despite its effectiveness, ICL usually relies heavily on the quality of the provided demonstrations [143? ], which may lead to the gener- ation of sub-op...
+
+SOURCE 2
+Paper              : A Survey on Retrieval-Augmented Text Generation for Large Language Models
+Page               : 1
+Semantic similarity: 0.8000
+Citation count     : 55
+Credibility score  : 0.4526
+Preview            : The Survey of Retrieval-Augmented Text Generation in Large Language Models YIZHENG HUANG and JIMMY X. HUANG, York University, Canada Retrieval-Augmented Generation (RAG) merges retrieval methods with deep learning advancements to address the static limitations of large language models (LLMs) by enab...
+
+SOURCE 3
+Paper              : RAGChecker A Fine-grained Framework for Diagnosing Retrieval-Augmented Generation
+Page               : 10
+Semantic similarity: 0.7824
+Citation count     : 15
+Credibility score  : 0.3117
+Preview            : References [1] AI@Meta. Llama 3 model card. 2024. [2] A. Asai, S. Min, Z. Zhong, and D. Chen. Retrieval-based language models and applications. In Proceedings of the 61st Annual Meeting of the Association for Computational Linguistics (Volume 6: Tutorial Abstracts), pages 41–46, 2023. [3] H. Chase. ...
+
+SOURCE 4
+Paper              : A Survey on RAG Meeting LLMs Towards Retrieval-Augmented Large Language Models
+Page               : 1
+Semantic similarity: 0.7588
+Citation count     : 726
+Credibility score  : 0.7408
+Preview            : of retrieval mod- els with language models has given rise to Retrieval-Augmented Generation (RAG) [74], which has emerged as one of the most representative techniques in the field of generative AI, aiming to enhance the quality of the generated text content with retrieved information [6, 74, 77]. To...
+
+SOURCE 5
+Paper              : Retrieval-Augmented Generation A Comprehensive Survey of Architectures, Enhancements, and Robustness Frontiers
+Page               : 2
+Semantic similarity: 0.7559
+Citation count     : 7
+Credibility score  : 0.2338
+Preview            : Retrieval-Augmented Generation: A Survey 2 Fig. 1. Retrieval-Augmented Generation (RAG) workflow. A user query is processed by the retriever, which may perform query expansion before retrieving documents from external knowledge sources (e.g., databases, APIs, or document stores). Retrieved documents...
+
+
+------------------------------------------------------------------------------------------
+GENERATED ANSWER
+------------------------------------------------------------------------------------------
+
+
+### What is Retrieval-Augmented Generation (RAG)?
+
+Retrieval-Augmented Generation (RAG) is a generative AI framework that merges document retrieval methods with deep learning advancements to augment large language models (LLMs) with external, dynamic, and verifiable knowledge (*A Survey on Retrieval-Augmented Text Generation for Large Language Models*, p. 1; *Retrieval-Augmented Generation: A Survey*, p. 2). 
+
+Technically, RAG operates through a sequence of integrated steps:
+1. **Retrieval**: When a user inputs a query, a retriever searches external knowledge sources (such as databases or document stores) to extract the most relevant documents (*A Survey on RAG Meeting LLMs*, p. 1; *Retrieval-Augmented Generation: A Survey*, p. 2).
+2. **Augmentation and Generation**: These retrieved documents are ranked and passed to the generator (the LLM) as factual context. The generator then synthesizes a final response conditioned on both the input query and the retrieved external content (*Retrieval-Augmented Generation: A Survey*, p. 2). 
+
+This approach combines the model's **parametric knowledge** (stored in its trained weights) with **non-parametric knowledge** (retrieved dynamically from an external corpus) (*Retrieval-Augmented Generation: A Survey*, p. 2).
+
+---
+
+### Why is RAG Useful for Large Language Models?
+
+RAG is highly valuable to LLMs because it addresses several fundamental limitations of standalone models:
+
+* **Overcoming Static Knowledge and Post-Training Limitations**: Standard LLMs rely on fixed pre-training datasets and cannot easily incorporate new information post-training. RAG enables the dynamic integration of up-to-date, real-world information (*A Survey on Retrieval-Augmented Text Generation*, p. 1).
+* **Reducing Hallucinations Cost-Effectively**: LLMs are prone to generating plausible but factually incorrect responses (hallucinations). Grounding responses in retrieved external context serves as a cost-effective solution that enhances the accuracy, factual consistency, and reliability of model outputs (*A Survey on Retrieval-Augmented Text Generation*, p. 1; *Retrieval-Augmented Generation: A Survey*, p. 2).
+* **Improving Performance in Specialized Domains**: LLMs trained on general data often perform poorly in specialized fields. RAG overcomes this by injecting domain-specific data from external databases at inference time (*A Survey on Retrieval-Augmented Text Generation*, p. 1).
+* **High Implementation Efficiency**: Adapting LLMs to new tasks or databases via RAG is computationally efficient, requiring minimal or even no additional model training or fine-tuning (*A Survey on RAG Meeting LLMs*, p. 1).
+
+---
+
+### Source Assessment
+
+1. **Paper**: *A Survey on RAG Meeting LLMs Towards Retrieval-Augmented Large Language Models*  
+   * **Page**: 1  
+   * **Citation Count**: 726  
+   * **Credibility Score**: 0.7408  
+   * **Why it was useful**: This highly cited, highly credible source provided the technical foundation of the retrieval-then-generation pipeline and detailed why RAG is computationally efficient (requiring minimal to no additional training).
+
+2. **Paper**: *A Survey on Retrieval-Augmented Text Generation for Large Language Models*  
+   * **Page**: 1  
+   * **Citation Count**: 55  
+   * **Credibility Score**: 0.4526  
+   * **Why it was useful**: Despite its moderate citation count, this paper provided the most direct explanation of why RAG is useful, explicitly outlining LLM limitations (such as static post-training limits, subpar performance in specialized domains, and high cost of training) that RAG resolves.
+
+3. **Paper**: *Retrieval-Augmented Generation: A Comprehensive Survey of Architectures, Enhancements, and Robustness Frontiers*  
+   * **Page**: 2  
+   * **Citation Count**: 7  
+   * **Credibility Score**: 0.2338  
+   * **Why it was useful**: Although it has the lowest citation count and credibility score, this paper provided the clearest mathematical and technical distinction between "parametric" and "non-parametric" knowledge in RAG systems, alongside a precise workflow explanation.
+
+Press ENTER to run the next test...
+
+##########################################################################################
+TEST 2
+##########################################################################################
+
+QUESTION:
+What is HyDE (Hypothetical Document Embeddings), and how does it improve dense retrieval?
+
+
+------------------------------------------------------------------------------------------
+TOP RETRIEVED SOURCES
+------------------------------------------------------------------------------------------
+
+SOURCE 1
+Paper              : Precise Zero-Shot Dense Retrieval without Relevance Labels
+Page               : 6
+Semantic similarity: 0.6152
+Citation count     : 303
+Credibility score  : 0.6428
+Preview            : also observe the InstructGPT model able to fur- ther bring up the performance, especially on DL19. This suggests that there may still exist certain fac- tors not captured by the ﬁne-tuned encoder but only by the generative model. 6 Conclusion At the end of the paper, we encourage the readers to take...
+
+SOURCE 2
+Paper              : A Survey on RAG Meeting LLMs Towards Retrieval-Augmented Large Language Models
+Page               : 6
+Semantic similarity: 0.5740
+Citation count     : 726
+Credibility score  : 0.7408
+Preview            : Conference’17, July 2017, Washington, DC, USA Wenqi Fan, Yujuan Ding, Liangbo Ning, Shijie Wang, Hengyun Li, Dawei Yin, Tat-Seng Chua, and Qing Li on ad-hoc information retrieval datasets. Similarly, Gao et al. [40] propose Hypothetical Document Embedding (HyDE) method, which instructs an LLM to gen...
+
+SOURCE 3
+Paper              : LongRAG A Dual-Perspective Retrieval-Augmented Generation Framework for Long-Context Question Answering
+Page               : 7
+Semantic similarity: 0.5253
+Citation count     : 28
+Credibility score  : 0.3786
+Preview            : with no approximation, we encode the entire g, which is composed of multiple documents, directly. The average size of g is 6K tokens. We can notice from the table that our approximation by taking the maximum score between the query and each text piece from the long context produces much better resul...
+
+SOURCE 4
+Paper              : Precise Zero-Shot Dense Retrieval without Relevance Labels
+Page               : 7
+Semantic similarity: 0.5234
+Citation count     : 303
+Credibility score  : 0.6428
+Preview            : ment. Dense retrievers consider vector similarities while self-attentive re-rankers regression scores. In comparison, the concept of relevance in HyDE is captured by an NLG model and the language gener- ation process. We demonstrate in many cases, HyDE can be as effective as dense retrievers that le...
+
+SOURCE 5
+Paper              : Dense Passage Retrieval for Open-Domain Question Answering
+Page               : 2
+Semantic similarity: 0.4888
+Citation count     : 142
+Credibility score  : 0.5580
+Preview            : corpus size can easily range from millions of docu- ments (e.g., Wikipedia) to billions (e.g., the Web). As a result, any open-domain QA system needs to include an efﬁcient retriever component that can se- lect a small set of relevant texts, before applying the reader to extract the answer (Chen et ...
+
+
+------------------------------------------------------------------------------------------
+GENERATED ANSWER
+------------------------------------------------------------------------------------------
+
+
+### What is HyDE (Hypothetical Document Embeddings)?
+HyDE is a retrieval method that instructs a Large Language Model (LLM) to generate hypothetical documents in response to a given query. These generated hypothetical documents are then embedded and utilized as new queries to search for neighboring documents using a dense retriever (*A Survey on RAG Meeting LLMs Towards Retrieval-Augmented Large Language Models*, Page 6).
+
+### How Does it Improve Dense Retrieval?
+HyDE improves dense retrieval through the following mechanisms:
+
+* **Generative Relevance Modeling:** Traditional dense retrievers depend on vector similarities and self-attentive re-rankers to calculate numerical regression scores. In contrast, HyDE captures the concept of relevance using a Natural Language Generation (NLG) model and the language generation process (*Precise Zero-Shot Dense Retrieval without Relevance Labels*, Page 7).
+* **Elimination of Relevance Labels:** By delegating instruction understanding and relevance modeling to a flexible, powerful LLM, HyDE removes the need for supervised training relevance labels (*Precise Zero-Shot Dense Retrieval without Relevance Labels*, Page 7). 
+* **Strong Zero-Shot Performance:** At the beginning of a search system's lifecycle, HyDE offers zero-shot retrieval performance comparable to a fully fine-tuned supervised model, which is a capability other relevance-free models lack (*Precise Zero-Shot Dense Retrieval without Relevance Labels*, Page 7).
+
+---
+
+### SOURCE ASSESSMENT
+
+* **Paper:** *A Survey on RAG Meeting LLMs Towards Retrieval-Augmented Large Language Models*
+  * **Page:** 6
+  * **Citation Count:** 726
+  * **Credibility Score:** 0.7408
+  * **Utility:** Highly useful for providing a clear, concise definition of the HyDE framework's mechanical process (generating a hypothetical document via LLM to serve as an embedding query).
+
+* **Paper:** *Precise Zero-Shot Dense Retrieval without Relevance Labels*
+  * **Pages:** 6 & 7
+  * **Citation Count:** 303
+  * **Credibility Score:** 0.6428
+  * **Utility:** Extremely useful as the primary source explaining the philosophical and technical shift of HyDE (relevance captured by an NLG model rather than numerical scoring) and its performance advantages in zero-shot environments. While this source has a slightly lower credibility score than the survey paper, it provides the core, authoritative details regarding the system's design and benefits.
+
+Press ENTER to run the next test...
+
+##########################################################################################
+TEST 3
+##########################################################################################
+
+QUESTION:
+How does Dense Passage Retrieval (DPR) perform passage retrieval for open-domain question answering?
+
+
+------------------------------------------------------------------------------------------
+TOP RETRIEVED SOURCES
+------------------------------------------------------------------------------------------
+
+SOURCE 1
+Paper              : Dense Passage Retrieval for Open-Domain Question Answering
+Page               : 8
+Semantic similarity: 0.6943
+Citation count     : 142
+Credibility score  : 0.5580
+Preview            : more time it takes for inference. While DPR processes up to 100 passages for each question, the reader is able to ﬁt all of them into one batch on a sin- gle 32GB GPU, thus the latency remains almost identical to the single passage case (around 20ms). The exact impact on throughput is harder to mea-...
+
+SOURCE 2
+Paper              : Dense Passage Retrieval for Open-Domain Question Answering
+Page               : 2
+Semantic similarity: 0.6676
+Citation count     : 142
+Credibility score  : 0.5580
+Preview            : corpus size can easily range from millions of docu- ments (e.g., Wikipedia) to billions (e.g., the Web). As a result, any open-domain QA system needs to include an efﬁcient retriever component that can se- lect a small set of relevant texts, before applying the reader to extract the answer (Chen et ...
+
+SOURCE 3
+Paper              : Dense Passage Retrieval for Open-Domain Question Answering
+Page               : 1
+Semantic similarity: 0.6668
+Citation count     : 142
+Credibility score  : 0.5580
+Preview            : Dense Passage Retrieval for Open-Domain Question Answering Vladimir Karpukhin∗, Barlas O˘guz∗, Sewon Min†, Patrick Lewis, Ledell Wu, Sergey Edunov, Danqi Chen‡, Wen-tau Yih Facebook AI †University of Washington ‡Princeton University {vladk, barlaso, plewis, ledell, edunov, scottyih}@fb.com sewon@cs....
+
+SOURCE 4
+Paper              : Leveraging Passage Retrieval with Generative Models for Open Domain Question Answering
+Page               : 2
+Semantic similarity: 0.6137
+Citation count     : 99
+Credibility score  : 0.5178
+Preview            : to spans in support documents, thus requiring ab- stractive models. Raffel et al. (2019) showed that generative models are competitive for reading com- prehension tasks such as SQuAD (Rajpurkar et al., 2016), where answers are spans. Roberts et al. (2020) proposed to use large pretrained generative ...
+
+SOURCE 5
+Paper              : Lost in the Middle How Language Models Use Long Contexts
+Page               : 9
+Semantic similarity: 0.6064
+Citation count     : 1,243
+Credibility score  : 0.8012
+Preview            : to this question is ultimately downstream task-specific since it de- pends on the marginal value of the added context and the model’s ability to effectively use long input contexts, but we perform a case study with open- domain question answering on NaturalQuestions- Open to better understand this t...
+
+
+------------------------------------------------------------------------------------------
+GENERATED ANSWER
+------------------------------------------------------------------------------------------
+
+
+Based on the provided research papers, Dense Passage Retrieval (DPR) performs passage retrieval for open-domain question answering through the following technical process:
+
+1. **Dual-Encoder Framework:** DPR learns dense, continuous representations of both questions and passages using a dual-encoder framework (Source 3, Page 1).
+2. **Dense Passage Encoding & Indexing:** A dense encoder, $E_P(\cdot)$, maps each fixed-length text passage in a corpus of size $M$ to a $d$-dimensional real-valued vector (Source 2, Page 2). These vectors are then indexed in a continuous, low-dimensional space.
+3. **Efficient Retrieval (MIPS):** To retrieve the top $k$ passages (where $k$ is usually between 20 and 100) relevant to a run-time input question, the system matches the dense encoding of the question against the passage index. This search is performed efficiently using **Maximum Inner Product Search (MIPS)** algorithms combined with specialized in-memory data structures and indexing schemes (Source 2, Page 2; Source 3, Page 1).
+
+This dense mapping allows DPR to retrieve relevant texts by matching latent semantics (e.g., matching synonyms or paraphrases like "bad guy" to "villain") where traditional keyword-based, sparse vector space models (such as TF-IDF or BM25) would fail (Source 3, Page 1).
+
+---
+
+### SOURCE ASSESSMENT
+
+* **Paper:** *Dense Passage Retrieval for Open-Domain Question Answering* (Source 2, Page 2)
+  * **Citation Count:** 142
+  * **Credibility Score:** 0.5580
+  * **Why it was useful:** It provided the explicit definition of the passage encoder $E_P(\cdot)$, the use of fixed-length passages, and the scale of the retrieval task (indexing millions of passages to retrieve the top 20–100).
+
+* **Paper:** *Dense Passage Retrieval for Open-Domain Question Answering* (Source 3, Page 1)
+  * **Citation Count:** 142
+  * **Credibility Score:** 0.5580
+  * **Why it was useful:** It explained the underlying dual-encoder framework, the advantages of using dense semantic representations over sparse BM25 retrieval, and the utilization of Maximum Inner Product Search (MIPS) for efficient query processing.
+
+Press ENTER to run the next test...
+
+##########################################################################################
+TEST 4
+##########################################################################################
+
+QUESTION:
+What are the main advantages of using retrieval-augmented generation compared with relying only on the language model's parametric knowledge?
+
+
+------------------------------------------------------------------------------------------
+TOP RETRIEVED SOURCES
+------------------------------------------------------------------------------------------
+
+SOURCE 1
+Paper              : Corrective Retrieval Augmented Generation
+Page               : 1
+Semantic similarity: 0.7139
+Citation count     : 111
+Credibility score  : 0.5305
+Preview            : Corrective Retrieval Augmented Generation Shi-Qi Yan1*, Jia-Chen Gu2*, Yun Zhu3, Zhen-Hua Ling1 1National Engineering Research Center of Speech and Language Information Processing, University of Science and Technology of China, Hefei, China 2Department of Computer Science, University of California, ...
+
+SOURCE 2
+Paper              : Retrieval-Augmented Generation A Comprehensive Survey of Architectures, Enhancements, and Robustness Frontiers
+Page               : 2
+Semantic similarity: 0.7006
+Citation count     : 7
+Credibility score  : 0.2338
+Preview            : Retrieval-Augmented Generation: A Survey 2 Fig. 1. Retrieval-Augmented Generation (RAG) workflow. A user query is processed by the retriever, which may perform query expansion before retrieving documents from external knowledge sources (e.g., databases, APIs, or document stores). Retrieved documents...
+
+SOURCE 3
+Paper              : Retrieval-Augmented Generation A Comprehensive Survey of Architectures, Enhancements, and Robustness Frontiers
+Page               : 27
+Semantic similarity: 0.6917
+Citation count     : 7
+Credibility score  : 0.2338
+Preview            : the Association for Computational Linguistics 10 (2022), 539–554. doi:10.1162/tacl_a_00475 [68] Shuai Wang, Ekaterina Khramtsova, Shengyao Zhuang, and Guido Zuccon. 2024. FeB4RAG: Evaluating Federated Search in the Context of Retrieval Augmented Generation. In Proceedings of the 47th International A...
+
+SOURCE 4
+Paper              : REPLUG Retrieval-Augmented Black-Box Language Models
+Page               : 11
+Semantic similarity: 0.6915
+Citation count     : 186
+Credibility score  : 0.5881
+Preview            : Retrieval-augmented generation across heteroge- neous knowledge. In Proceedings of the 2022 Confer- ence of the North American Chapter of the Association for Computational Linguistics: Human Language Technolo- gies: Student Research Workshop, pp. 52–58, Hybrid: Seattle, Washington + Online, July 202...
+
+SOURCE 5
+Paper              : A Survey on Retrieval-Augmented Text Generation for Large Language Models
+Page               : 1
+Semantic similarity: 0.6815
+Citation count     : 55
+Credibility score  : 0.4526
+Preview            : The Survey of Retrieval-Augmented Text Generation in Large Language Models YIZHENG HUANG and JIMMY X. HUANG, York University, Canada Retrieval-Augmented Generation (RAG) merges retrieval methods with deep learning advancements to address the static limitations of large language models (LLMs) by enab...
+
+
+------------------------------------------------------------------------------------------
+GENERATED ANSWER
+------------------------------------------------------------------------------------------
+
+
+Based on the provided research-paper evidence, the main advantages of using Retrieval-Augmented Generation (RAG) compared to relying solely on a language model's parametric knowledge include:
+
+1. **Mitigation of Hallucinations and Factual Errors**: Large language models (LLMs) relying only on parametric knowledge struggle with factual errors and inevitably manifest hallucinations, as model weights alone cannot secure output accuracy (*Corrective Retrieval Augmented Generation*, Page 1). RAG enhances output accuracy and reliability by utilizing real-world data (*A Survey on Retrieval-Augmented Text Generation for Large Language Models*, Page 1).
+2. **Access to Dynamic, Up-to-Date Information**: LLMs are limited by static training data and cannot easily incorporate new information post-training (*A Survey on Retrieval-Augmented Text Generation for Large Language Models*, Page 1). RAG circumvents these static limitations by providing "non-parametric access to a dynamic evidence corpus," enabling real-time adaptability (*Retrieval-Augmented Generation A Comprehensive Survey of Architectures, Enhancements, and Robustness Frontiers*, Page 2).
+3. **Grounded and Verifiable Outputs**: Incorporating a retriever provides a dynamic context that allows the generator to synthesize responses that are "grounded and verifiable," thereby promoting factual consistency (*Retrieval-Augmented Generation A Comprehensive Survey of Architectures, Enhancements, and Robustness Frontiers*, Page 2).
+4. **Cost-Effectiveness**: Retraining or updating LLMs requires massive resources for data annotation and computational training. RAG offers a cost-effective methodology to address incorrect responses and adapt models to specialized domains without continuous retraining (*A Survey on Retrieval-Augmented Text Generation for Large Language Models*, Page 1).
+
+---
+
+### Source Assessment
+
+* **Paper:** *Corrective Retrieval Augmented Generation*
+  * **Page:** 1
+  * **Citation Count:** 111
+  * **Credibility Score:** 0.5305
+  * **Contribution:** This source was highly credible due to its high citation count and was useful for defining the baseline limitations of parametric knowledge (such as the inevitability of hallucinations and factual errors).
+
+* **Paper:** *A Survey on Retrieval-Augmented Text Generation for Large Language Models*
+  * **Page:** 1
+  * **Citation Count:** 55
+  * **Credibility Score:** 0.4526
+  * **Contribution:** This source was highly useful for detailing the "static limitations" of pre-trained models and highlighting RAG as a cost-effective alternative to model retraining.
+
+* **Paper:** *Retrieval-Augmented Generation A Comprehensive Survey of Architectures, Enhancements, and Robustness Frontiers*
+  * **Page:** 2
+  * **Citation Count:** 7
+  * **Credibility Score:** 0.2338
+  * **Contribution:** Although it has a lower citation-based credibility score, this survey provided precise terminology regarding the technical mechanism of RAG (e.g., contrasting "parametric knowledge" with a "non-parametric dynamic evidence corpus") and the resulting generation of "grounded and verifiable" text.
+
+Press ENTER to run the next test...
+
+##########################################################################################
+TEST 5
+##########################################################################################
+
+QUESTION:
+What is Self-RAG, and how does it use self-reflection during retrieval and generation?
+
+
+------------------------------------------------------------------------------------------
+TOP RETRIEVED SOURCES
+------------------------------------------------------------------------------------------
+
+SOURCE 1
+Paper              : Retrieval-Augmented Generation for Large Language Models A Survey
+Page               : 1
+Semantic similarity: 0.5817
+Citation count     : 730
+Credibility score  : 0.7414
+Preview            : techniques. The burgeoning field of RAG has experienced swift growth, yet it has not been accompanied by a systematic synthesis that could clarify its broader trajectory. This survey endeavors to fill this gap by mapping out the RAG process and charting its evolution and anticipated future paths, wi...
+
+SOURCE 2
+Paper              : Corrective Retrieval Augmented Generation
+Page               : 10
+Semantic similarity: 0.5413
+Citation count     : 111
+Credibility score  : 0.5305
+Preview            : Bailey, Zhifeng Chen, Eric Chu, Jonathan H. Clark, Laurent El Shafey, Yanping Huang, Kathy Meier-Hellstern, Gaurav Mishra, Erica Moreira, Mark Omernick, Kevin Robinson, Sebastian Ruder, et al. 2023. PaLM 2 technical report. CoRR, abs/2305.10403. Akari Asai, Zeqiu Wu, Yizhong Wang, Avirup Sil, and Ha...
+
+SOURCE 3
+Paper              : Self-RAG Learning to Retrieve, Generate, and Critique through Self-Reflection
+Page               : 10
+Semantic similarity: 0.5315
+Citation count     : 0
+Credibility score  : 0.0000
+Preview            : the model-predicted reflection tokens about ISREL and ISSUP match their inspections (e.g., whether the fully supported output is supported by the cited evidence). Human annotators find SELF-RAG answers are often plausible and supported by relevant passages with higher S&P scores on short-form PopQA,...
+
+SOURCE 4
+Paper              : Self-RAG Learning to Retrieve, Generate, and Critique through Self-Reflection
+Page               : 17
+Semantic similarity: 0.5250
+Citation count     : 0
+Credibility score  : 0.0000
+Preview            : Preprint. A SELF-RAG DETAILS A.1 REFLECTION TOKENS. Definitions of reflection tokens. Below, we provide a detailed definition of reflection type and output tokens. The first three aspects will be provided at each segment level, while the final aspect is only given at each output level. • Retrieval-o...
+
+SOURCE 5
+Paper              : Retrieval-Augmented Generation for Large Language Models A Survey
+Page               : 2
+Semantic similarity: 0.5248
+Citation count     : 730
+Credibility score  : 0.7414
+Preview            : 2 Fig. 1. Technology tree of RAG research. The stages of involving RAG mainly include pre-training, fine-tuning, and inference. With the emergence of LLMs, research on RAG initially focused on leveraging the powerful in context learning abilities of LLMs, primarily concentrating on the inference sta...
+
+
+------------------------------------------------------------------------------------------
+GENERATED ANSWER
+------------------------------------------------------------------------------------------
+
+GENERATION FAILED
+Error: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.5-flash\nPlease retry in 18.511552022s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-3.5-flash', 'location': 'global'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '18s'}]}}
+
+Press ENTER to run the next test...
+
+##########################################################################################
+TEST 6
+##########################################################################################
+
+QUESTION:
+What problem does Corrective Retrieval-Augmented Generation (CRAG) attempt to solve, and how does it correct poor retrieval results?
+
+
+------------------------------------------------------------------------------------------
+TOP RETRIEVED SOURCES
+------------------------------------------------------------------------------------------
+
+SOURCE 1
+Paper              : Retrieval-Augmented Generation A Comprehensive Survey of Architectures, Enhancements, and Robustness Frontiers
+Page               : 22
+Semantic similarity: 0.6798
+Citation count     : 7
+Credibility score  : 0.2338
+Preview            : Retrieval-Augmented Generation: A Survey 22 [4] Scott Barnett, Stefanus Kurniawan, Srikanth Thudumu, Zach Brannelly, and Mohamed Abdelrazek. 2024. Seven Failure Points When Engineering a Retrieval Augmented Generation System. In Proceedings of the IEEE/ACM 3rd International Conference on AI Engineer...
+
+SOURCE 2
+Paper              : Corrective Retrieval Augmented Generation
+Page               : 2
+Semantic similarity: 0.6550
+Citation count     : 111
+Credibility score  : 0.5305
+Preview            : a substantial amount of irrelevant information, impeding the models from acquiring accurate knowledge and potentially misleading them, result- ing in issues such as hallucinations (Zhang et al., 2023b). However, most conventional RAG ap- proaches indiscriminately incorporate the retrieved documents,...
+
+SOURCE 3
+Paper              : Retrieval-Augmented Generation A Comprehensive Survey of Architectures, Enhancements, and Robustness Frontiers
+Page               : 7
+Semantic similarity: 0.6465
+Citation count     : 7
+Credibility score  : 0.2338
+Preview            : Retrieval-Augmented Generation: A Survey 7 based on low-confidence predictions during sentence generation. SELF-ROUTE [41] dynamically routes tasks between retrieval and generation modules based on model self-assessed difficulty, and AU-RAG [28] leverages agentic decision- making to mediate between ...
+
+SOURCE 4
+Paper              : Corrective Retrieval Augmented Generation
+Page               : 1
+Semantic similarity: 0.6417
+Citation count     : 111
+Credibility score  : 0.5305
+Preview            : Corrective Retrieval Augmented Generation Shi-Qi Yan1*, Jia-Chen Gu2*, Yun Zhu3, Zhen-Hua Ling1 1National Engineering Research Center of Speech and Language Information Processing, University of Science and Technology of China, Hefei, China 2Department of Computer Science, University of California, ...
+
+SOURCE 5
+Paper              : Retrieval-Augmented Generation A Comprehensive Survey of Architectures, Enhancements, and Robustness Frontiers
+Page               : 23
+Semantic similarity: 0.6412
+Citation count     : 7
+Credibility score  : 0.2338
+Preview            : Retrieval-Augmented Generation: A Survey 23 Arthur Hinsvark, Arun Rao, Aston Zhang, Aurelien Rodriguez, Austen Gregerson, Ava Spataru, Baptiste Roziere, Bethany Biron, Binh Tang, Bobbie Chern, Charlotte Caucheteux, Chaya Nayak, Chloe Bi, Chris Marra, Chris McConnell, Christian Keller, Christophe Tou...
+
+
+------------------------------------------------------------------------------------------
+GENERATED ANSWER
+------------------------------------------------------------------------------------------
+
+GENERATION FAILED
+Error: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.5-flash\nPlease retry in 11.431532917s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '11s'}]}}
+
+Press ENTER to run the next test...
+
+##########################################################################################
+TEST 7
+##########################################################################################
+
+QUESTION:
+How does RAGAS evaluate a Retrieval-Augmented Generation system?
+
+
+------------------------------------------------------------------------------------------
+TOP RETRIEVED SOURCES
+------------------------------------------------------------------------------------------
+
+SOURCE 1
+Paper              : A Survey on RAG Meeting LLMs Towards Retrieval-Augmented Large Language Models
+Page               : 4
+Semantic similarity: 0.6798
+Citation count     : 726
+Credibility score  : 0.7408
+Preview            : Conference’17, July 2017, Washington, DC, USA Wenqi Fan, Yujuan Ding, Liangbo Ning, Shijie Wang, Hengyun Li, Dawei Yin, Tat-Seng Chua, and Qing Li Despite its effectiveness, ICL usually relies heavily on the quality of the provided demonstrations [143? ], which may lead to the gener- ation of sub-op...
+
+SOURCE 2
+Paper              : Retrieval-Augmented Generation A Comprehensive Survey of Architectures, Enhancements, and Robustness Frontiers
+Page               : 18
+Semantic similarity: 0.6648
+Citation count     : 7
+Credibility score  : 0.2338
+Preview            : Retrieval-Augmented Generation: A Survey 18 6 Evaluation and Benchmarking of RAG Systems Retrieval-Augmented Generation (RAG) systems introduce unique challenges for evaluation due to their hybrid architecture combining a retriever and a generator. Accurate evaluation demands assessing multiple inte...
+
+SOURCE 3
+Paper              : A Survey on Retrieval-Augmented Text Generation for Large Language Models
+Page               : 24
+Semantic similarity: 0.6553
+Citation count     : 55
+Credibility score  : 0.4526
+Preview            : initial retrievals are re-ranked using a DeBERTa-v3 [79] cross-encoder. The analysis demonstrates that as retrieval quality improves, LLM performance increases significantly across various models. Notably, re- ranking with SPLADEv3 and DeBERTa-v3 consistently achieves the best results across dataset...
+
+SOURCE 4
+Paper              : Retrieval-Augmented Generation for Large Language Models A Survey
+Page               : 12
+Semantic similarity: 0.6511
+Citation count     : 730
+Credibility score  : 0.7414
+Preview            : the evaluation encompasses the faithfulness, relevance, and non-harmfulness of the generated answers. In contrast, for labeled content, the focus is on the accuracy of the information produced by the model [161]. Additionally, both retrieval and generation quality assessments can be conducted throug...
+
+SOURCE 5
+Paper              : RAGChecker A Fine-grained Framework for Diagnosing Retrieval-Augmented Generation
+Page               : 1
+Semantic similarity: 0.6481
+Citation count     : 15
+Credibility score  : 0.3117
+Preview            : RAGCHECKER: A Fine-grained Framework for Diagnosing Retrieval-Augmented Generation Dongyu Ru1∗ Lin Qiu1∗ Xiangkun Hu1∗ Tianhang Zhang1∗ Peng Shi1∗ Shuaichen Chang1∗ Cheng Jiayang1† Cunxiang Wang1† Shichao Sun2 Huanyu Li2 Zizhao Zhang1† Binjie Wang1† Jiarong Jiang1 Tong He1 Zhiguo Wang1 Pengfei Liu2 ...
+
+
+------------------------------------------------------------------------------------------
+GENERATED ANSWER
+------------------------------------------------------------------------------------------
+
+GENERATION FAILED
+Error: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.5-flash\nPlease retry in 4.509382304s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '4s'}]}}
+
+Press ENTER to run the next test...
+
+##########################################################################################
+TEST 8
+##########################################################################################
+
+QUESTION:
+What is the 'Lost in the Middle' problem, and how does it affect language models when using long contexts?
+
+
+------------------------------------------------------------------------------------------
+TOP RETRIEVED SOURCES
+------------------------------------------------------------------------------------------
+
+SOURCE 1
+Paper              : Lost in the Middle How Language Models Use Long Contexts
+Page               : 1
+Semantic similarity: 0.5925
+Citation count     : 1,243
+Credibility score  : 0.8012
+Preview            : Lost in the Middle: How Language Models Use Long Contexts Nelson F. Liu1∗ Kevin Lin2 John Hewitt1 Ashwin Paranjape3 Michele Bevilacqua3 Fabio Petroni3 Percy Liang1 1Stanford University 2University of California, Berkeley 3Samaya AI nfliu@cs.stanford.edu Abstract While recent language models have the...
+
+SOURCE 2
+Paper              : RAPTOR Recursive Abstractive Processing for Tree-Organized Retrieval
+Page               : 13
+Semantic similarity: 0.5489
+Citation count     : 27
+Credibility score  : 0.3746
+Preview            : Published as a conference paper at ICLR 2024 Patrick Lewis, Ethan Perez, Aleksandra Piktus, Fabio Petroni, Vladimir Karpukhin, Naman Goyal, Heinrich K¨uttler, Mike Lewis, Wen-tau Yih, Tim Rockt¨aschel, et al. Retrieval-Augmented Gener- ation for Knowledge-Intensive NLP Tasks. Advances in Neural Info...
+
+SOURCE 3
+Paper              : Lost in the Middle How Language Models Use Long Contexts
+Page               : 2
+Semantic similarity: 0.5459
+Citation count     : 1,243
+Credibility score  : 0.8012
+Preview            : 2023; Rubin and Berant, 2023, inter alia) have resulted in language models with larger context windows (e.g., 4096, 32K, and even 100K tokens), but it remains unclear how these extended-context language models make use of their input contexts when performing downstream tasks. We empirically investig...
+
+SOURCE 4
+Paper              : REPLUG Retrieval-Augmented Black-Box Language Models
+Page               : 11
+Semantic similarity: 0.5436
+Citation count     : 186
+Credibility score  : 0.5881
+Preview            : Retrieval-augmented generation across heteroge- neous knowledge. In Proceedings of the 2022 Confer- ence of the North American Chapter of the Association for Computational Linguistics: Human Language Technolo- gies: Student Research Workshop, pp. 52–58, Hybrid: Seattle, Washington + Online, July 202...
+
+SOURCE 5
+Paper              : Lost in the Middle How Language Models Use Long Contexts
+Page               : 11
+Semantic similarity: 0.5314
+Citation count     : 1,243
+Credibility score  : 0.8012
+Preview            : ory. Observing a serial-position-like effect in lan- guage models is perhaps surprising, since the self- attention mechanisms underlying Transformer lan- guage models is technically equally capable of re- trieving any token from their contexts. 7 Conclusion We empirically study how language models u...
+
+
+------------------------------------------------------------------------------------------
+GENERATED ANSWER
+------------------------------------------------------------------------------------------
+
+GENERATION FAILED
+Error: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.5-flash\nPlease retry in 2.885530683s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-3.5-flash', 'location': 'global'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '2s'}]}}
+
+Press ENTER to run the next test...
+
+##########################################################################################
+TEST 9
+##########################################################################################
+
+QUESTION:
+How do RAG, REALM, and RETRO differ in the way they use external retrieved information?
+
+
+------------------------------------------------------------------------------------------
+TOP RETRIEVED SOURCES
+------------------------------------------------------------------------------------------
+
+SOURCE 1
+Paper              : From Local to Global A Graph RAG Approach to Query-Focused Summarization
+Page               : 2
+Semantic similarity: 0.6032
+Citation count     : 116
+Credibility score  : 0.5354
+Preview            : of the GraphRAG approach are also available as extensions to multiple open- source libraries, including LangChain (LangChain, 2024), LlamaIndex (LlamaIndex, 2024), Nebu- laGraph (NebulaGraph, 2024), and Neo4J (Neo4J, 2024). 2 Background 2.1 RAG Approaches and Systems RAG generally refers to any syst...
+
+SOURCE 2
+Paper              : Retrieval-Augmented Generation for Large Language Models A Survey
+Page               : 1
+Semantic similarity: 0.5575
+Citation count     : 730
+Credibility score  : 0.7414
+Preview            : techniques. The burgeoning field of RAG has experienced swift growth, yet it has not been accompanied by a systematic synthesis that could clarify its broader trajectory. This survey endeavors to fill this gap by mapping out the RAG process and charting its evolution and anticipated future paths, wi...
+
+SOURCE 3
+Paper              : A Survey on Retrieval-Augmented Text Generation for Large Language Models
+Page               : 2
+Semantic similarity: 0.5306
+Citation count     : 55
+Credibility score  : 0.4526
+Preview            : 2 Huang et al. Fig. 1. An example of RAG benefits ChatGPT resolves questions that cannot be answered beyond the scope of the training data and generates correct results. hinders LLMs’ ability to stay updated. Third, LLMs are susceptible to generating convincing yet inaccurate responses, known as “ha...
+
+SOURCE 4
+Paper              : Retrieval-Augmented Generation for Large Language Models A Survey
+Page               : 7
+Semantic similarity: 0.5299
+Citation count     : 730
+Credibility score  : 0.7414
+Preview            : 7 Fig. 4. RAG compared with other model optimization methods in the aspects of “External Knowledge Required” and “Model Adaption Required”. Prompt Engineering requires low modifications to the model and external knowledge, focusing on harnessing the capabilities of LLMs themselves. Fine-tuning, on t...
+
+SOURCE 5
+Paper              : RAGChecker A Fine-grained Framework for Diagnosing Retrieval-Augmented Generation
+Page               : 6
+Semantic similarity: 0.5115
+Citation count     : 15
+Credibility score  : 0.3117
+Preview            : used by the generator. Retrieved relevant information is measured by the number of ground-truth answer claims entailed in retrieved chunks, while the evidence of being used by generator is reflected by entailment in model response. Therefore, the context utilization is computed as the ratio between ...
+
+
+------------------------------------------------------------------------------------------
+GENERATED ANSWER
+------------------------------------------------------------------------------------------
+
+GENERATION FAILED
+Error: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.5-flash\nPlease retry in 1.791370149s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'model': 'gemini-3.5-flash', 'location': 'global'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '1s'}]}}
+
+Press ENTER to run the next test...
+
+##########################################################################################
+TEST 10
+##########################################################################################
+
+QUESTION:
+What is the current market capitalization of NVIDIA in September 2026?
+
+
+------------------------------------------------------------------------------------------
+TOP RETRIEVED SOURCES
+------------------------------------------------------------------------------------------
+
+SOURCE 1
+Paper              : Toolformer Language Models Can Teach Themselves to Use Tools
+Page               : 17
+Semantic similarity: 0.3551
+Citation count     : 0
+Credibility score  : 0.0000
+Preview            : Input: The president of the United States is Joe Biden. Output: The president of the United States is [Calendar()] Joe Biden. Input: The current day of the week is Wednesday. Output: The current day of the week is [Calendar()] Wednesday. Input: The number of days from now until Christmas is 30. Outp...
+
+SOURCE 2
+Paper              : LoRA Low-Rank Adaptation of Large Language Models
+Page               : 5
+Semantic similarity: 0.3123
+Citation count     : 0
+Credibility score  : 0.0000
+Preview            : Liang (2021) on GPT-2 for a direct com- parison and add WikiSQL (Zhong et al., 2017) (NL to SQL queries) and SAMSum (Gliwa et al., 2019) (conversation summarization) for large-scale experiments on GPT-3. See Appendix C for more details on the datasets we use. We use NVIDIA Tesla V100 for all experim...
+
+SOURCE 3
+Paper              : Improving Language Models by Retrieving from Trillions of Tokens
+Page               : 40
+Semantic similarity: 0.2772
+Citation count     : 300
+Credibility score  : 0.6417
+Preview            : Tokyo 2020 Games due to the st 2021 in Tokyo, Japan. The Games ympics and Paralympics were postpone ympics and Paralympics were postpone COVID-19 pandemic, with both the Oly were postponed in March 2020 as a re d by one year due to the COVID-19 pa d by one year due to the COVID-19 pa mpics and Paral...
+
+SOURCE 4
+Paper              : Training Language Models to Follow Instructions with Human Feedback
+Page               : 65
+Semantic similarity: 0.2743
+Citation count     : 0
+Credibility score  : 0.0000
+Preview            : Prompt: Based on the following passage, provide one bullet point of evidence of a positive trend in the employment market, and one bullet point of a negative trend in the employment market, (use a "-" as a bullet point, Capitalize the ﬁrst letter of the ﬁrst word for each bullet point, and include a...
+
+SOURCE 5
+Paper              : LongRAG A Dual-Perspective Retrieval-Augmented Generation Framework for Long-Context Question Answering
+Page               : 8
+Semantic similarity: 0.2340
+Citation count     : 28
+Credibility score  : 0.3786
+Preview            : NQ EM Closed-Book GPT-4-Turbo (Achiam et al., 2023) 41.2 Gemini-1.5-Pro (Reid et al., 2024) 47.8 Claude-3-Opus (Anthropic, 2024) 49.2 Fully-supervised RAG REALM (Guu et al., 2020) 40.4 DPR (Karpukhin et al., 2020) 41.5 RAG (Lewis et al., 2020) 44.5 RETRO (Borgeaud et al., 2022) 45.5 RePAQ (Lewis et ...
+
+
+------------------------------------------------------------------------------------------
+GENERATED ANSWER
+------------------------------------------------------------------------------------------
+
+GENERATION FAILED
+Error: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 20, model: gemini-3.5-flash\nPlease retry in 707.953861ms.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerDayPerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.5-flash'}, 'quotaValue': '20'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '0s'}]}}
+
+
+==========================================================================================
+ALL TESTS COMPLETED
+==========================================================================================
+
+Complete output saved to: test_output.txt

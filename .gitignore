@@ -1,0 +1,10 @@
+.env
+__pycache__/
+*.pyc
+
+.venv/
+venv/
+
+data/embeddings.npy
+
+Lab6_Instructions.pdf

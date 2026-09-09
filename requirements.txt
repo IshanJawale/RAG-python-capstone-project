@@ -1,0 +1,7 @@
+pymupdf
+sentence-transformers
+numpy
+google-genai
+python-dotenv
+tqdm
+requests

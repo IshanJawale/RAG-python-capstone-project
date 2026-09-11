@@ -5,3 +5,14 @@ google-genai
 python-dotenv
 tqdm
 requests
+rank-bm25
+tavily-python
+streamlit
+scikit-learn
+matplotlib
+nltk
+ipykernel
+notebook
+Pillow
+torchvision
+ipykernel

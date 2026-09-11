@@ -1,0 +1,82 @@
+# Project Log — Adaptive Multimodal RAG
+
+---
+
+[2026-09-09] Read README.md and understood full project scope — Adaptive Multimodal RAG over 30 research papers with routing, BM25+dense hybrid retrieval, reranking, web fallback (Tavily), figure extraction, and evaluation notebook.
+
+[2026-09-09] Confirmed 30 research PDFs already present in papers/ directory.
+
+[2026-09-09] Reviewed existing src/ code — ingestion.py, chunking.py, embeddings.py, retrieval.py, generation.py all present and functional. Day 1 MVP is complete.
+
+[2026-09-09] Confirmed data artifacts already saved — chunks.json (3.2 MB), embeddings.npy (1.6 MB), figures.json, citations.json, and figures/ directory.
+
+[2026-09-09] Noted that chunking.py splits on raw words which can break sentences mid-thought — flagged for fix.
+
+[2026-09-11] Reviewed full project state after restart. Created todo.md with all remaining work organized by priority.
+
+[2026-09-11] Created log.txt to track all actions going forward.
+
+[2026-09-11] Updated requirements.txt — added rank-bm25, tavily-python, streamlit, scikit-learn, matplotlib, nltk, ipykernel, notebook.
+
+[2026-09-11] Fixed src/chunking.py — replaced raw word-split with NLTK sentence-aware chunking. Chunks now always start/end on sentence boundaries.
+
+[2026-09-11] Rewrote src/retrieval.py — split into DenseRetriever, BM25Retriever (with save/load), HybridRetriever (union dedup).
+
+[2026-09-11] Created src/reranking.py — Reranker class using cross-encoder/ms-marco-MiniLM-L-6-v2. rerank(query, candidates, top_k) returns sorted results.
+
+[2026-09-11] Created src/routing.py — Gemini LLM classifies intent/source/modality. Validates all output, falls back to LOCAL/TEXT on error.
+
+[2026-09-11] Created src/web_search.py — Tavily wrapper returning chunk-format dicts. Fails gracefully if API key missing.
+
+[2026-09-11] Rewrote src/generation.py — added generate_answer_with_figure() for Gemini multimodal (image bytes + text). Graceful fallback to text-only.
+
+[2026-09-11] Created src/figures.py — find_figures_for_question() uses token overlap on captions/paper IDs to find relevant figures without image embeddings.
+
+[2026-09-11] Updated ingest.py — added Step 4: build and save BM25 index to data/bm25.pkl.
+
+[2026-09-11] Rewrote main.py — full adaptive pipeline: Router → Hybrid retrieval → Reranking → Confidence fallback → Figure routing → Multimodal or text-only generation.
+
+[2026-09-11] Created app/app.py — Streamlit UI with cached models, routing display, sources expander, figure inline display, sidebar controls.
+
+[2026-09-11] Created notebooks/evaluation.ipynb — 30 ground-truth questions, retrieval experiments (BM25/Dense/Hybrid/Hybrid+Reranker), routing eval, multimodal eval, plots, summary.
+
+[2026-09-11] Updated todo.md — all main todos marked complete. Remaining: re-run ingest.py, add TAVILY_API_KEY, run notebook.
+
+[2026-09-11] Fixed model name in generation.py, routing.py, app.py — changed gemini-2.5-flash (deprecated) to gemini-2.0-flash-lite. This also fixes the router "Default fallback" bug.
+
+[2026-09-11] gemini-2.0-flash-lite also deprecated — updated all model references to gemini-3.6-flash (generation.py, routing.py, app.py).
+
+[2026-09-11] TRIED: LLM-based intent/source/modality routing (routing.py). PROBLEM: Routing was unreliable — many questions need both text AND figures but router was classifying them as TEXT only. Also adds latency and a full Gemini API call just to route. For a capstone with 30 papers, routing is overcomplicated. Dropping hard routing in favour of "always fetch both" approach — text chunks always + figures always if captions match, let Gemini decide what to use.
+
+[2026-09-11] APPROACH PROPOSED (pending review): Remove text-vs-image hard routing. Always run hybrid text retrieval + caption-based figure retrieval in parallel. If relevant figures found, always include them in the multimodal Gemini prompt. Also add CLIP image embeddings at ingest time so figure matching is semantic (text query → CLIP text encoder → cosine sim vs CLIP image embeddings) rather than just keyword overlap.
+
+[2026-09-11] BUG OBSERVED: Figure retriever returned wrong image — Chain-of-Thought paper's green checkmark icon instead of CRAG architecture diagram. Root cause: (1) old find_figures_for_question() ignored which paper text chunks came from, (2) small icons (no size filter) were in the figure index.
+
+[2026-09-11] FIXED src/ingestion.py — added 200×200px minimum size filter (skips icons/logos), added regex caption extraction ("Figure X. ..."), stores width/height in figure metadata.
+
+[2026-09-11] FIXED src/figures.py — new find_figures_for_chunks() uses retrieved text chunks to constrain figure search to the correct paper (+30 pts for paper match, -50 pts for off-paper with no overlap), adds size bonus, explicit figure-number matching from query.
+
+[2026-09-11] REMOVED modality routing from main.py and app.py — always attempt figure retrieval after text retrieval (paper-aware). Multimodal generation used automatically if figure found. Kept LOCAL/WEB source routing (still useful).
+
+
+[2026-09-11] NOTE: ingest.py must be re-run to rebuild figures.json with new size filter + caption extraction. Existing figures.json has no width/height/caption fields.
+
+[2026-09-11] DIAGNOSED: CRAG architecture Figure 2 missing from figures/. Reason: PyMuPDF get_images() only captures embedded raster bitmaps — architecture diagrams drawn with vector PDF commands (lines, boxes, arrows) are invisible to it.
+
+[2026-09-11] FIXED src/ingestion.py — added Mode 2 (page-rendered figures): for every page whose text contains "Figure X", renders that page region as PNG using page.get_pixmap(clip=...). Captures ALL vector diagrams. Added PIL+numpy quality filtering for both modes: rejects images that are >93% white/black, std < 12 (solid box), or aspect ratio > 8 (thin lines/arrows). Added Pillow to requirements.txt.
+
+[2026-09-11] BUG OBSERVED: `streamlit run app/app.py` failed with `ModuleNotFoundError: No module named 'torchvision'`. Root cause: `transformers` requires `torchvision` for some image processing models (like cross-encoder or CLIP).
+
+[2026-09-11] FIXED requirements.txt & venv — installed `torchvision` and added it to `requirements.txt`.
+
+[2026-09-11] BUG OBSERVED: `ingest.py` crashed at the end with `UnicodeEncodeError: 'charmap' codec can't encode character`. Root cause: Windows console (`cp1252`) couldn't print the box-drawing character `─` and leftwards arrow `←`.
+
+[2026-09-11] FIXED ingest.py & src/ingestion.py — replaced fancy unicode characters with standard ASCII dashes (`-` and `<-`) for Windows terminal compatibility. Ingestion successfully extracted 382 figures (97 embedded, 285 rendered vector diagrams) and 1078 text chunks.
+
+[2026-09-11] UI UPDATE: Replaced single `st.text_input` with continuous `st.chat_input` and `st.chat_message` loop in `app/app.py`. The interface now behaves like a modern chatbot with persistent message history and supports 'Enter' to submit.
+[2026-09-11] CLEANUP: Removed the interactive terminal Q&A loop from `main.py` since the Streamlit UI is now fully functional and provides a superior chatbot experience. `main.py` now just prints instructions to launch Streamlit.
+[2026-09-11] RESTRUCTURE: Moved `main.py` into `src/pipeline.py` and stripped out the dead terminal loop completely. The codebase is now neatly organized with no unused entry points, and `notebooks/evaluation.ipynb` imports directly from `src.pipeline`.
+
+[2026-09-11] BUG OBSERVED: Irrelevant queries like "mahabharat" were still returning a random figure from the local corpus. Root cause: The local text retriever always returns *some* chunks (even if terrible), and the figure retriever was blindly boosting figures from whatever paper those terrible chunks came from.
+[2026-09-11] FIXED src/figures.py — Figure retriever now checks the `rerank_score` of the text chunks. If a text chunk has a negative score (irrelevant), it is ignored and won't trigger paper-level figure bonuses. Added an absolute minimum relevance score threshold (>= 10) so the system returns *no figure* when nothing matches.
+[2026-09-11] DOCUMENTATION: Completely rewrote `README.md` to be shorter and more concise. Removed old planning checklists and focused purely on what the project is, the technology stack (what/where/why), and clear instructions on how to run it.

@@ -6,11 +6,15 @@ Run from project root:
 """
 
 import json
+import os
 import sys
 from pathlib import Path
 
 import numpy as np
 import streamlit as st
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Project root on path
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -19,8 +23,9 @@ from src.retrieval  import DenseRetriever, BM25Retriever, HybridRetriever
 from src.reranking  import Reranker
 from src.routing    import classify_query, needs_web_fallback
 from src.web_search import TavilySearcher
-from src.figures    import load_figures, find_figures_for_chunks, get_figure_path
-from src.generation import generate_answer, generate_answer_with_figure
+from src.figures      import load_figures, find_figures_for_chunks, get_figure_path
+from src.generation   import generate_answer, generate_answer_with_figure
+from src.credibility  import load_citations, get_paper_credibility, aggregate_credibility
 
 
 # ======================================================================
@@ -30,6 +35,7 @@ from src.generation import generate_answer, generate_answer_with_figure
 CHUNKS_PATH     = Path("data/chunks.json")
 EMBEDDINGS_PATH = Path("data/embeddings.npy")
 BM25_PATH       = Path("data/bm25.pkl")
+CITATIONS_PATH  = Path("data/citations.json")
 WEB_FALLBACK_THRESHOLD = 0.0
 
 SOURCE_COLORS = {"LOCAL": "🟢", "WEB": "🌐", "BOTH": "🔵"}
@@ -56,6 +62,7 @@ def load_everything():
 
     embeddings = np.load(EMBEDDINGS_PATH)
     figures    = load_figures()
+    citations  = load_citations(CITATIONS_PATH)
 
     dense = DenseRetriever(embeddings, chunks)
 
@@ -72,7 +79,7 @@ def load_everything():
     except EnvironmentError:
         web_search = None
 
-    return hybrid, reranker, figures, web_search, len(chunks)
+    return hybrid, reranker, figures, web_search, len(chunks), citations
 
 
 # ======================================================================
@@ -84,9 +91,6 @@ st.set_page_config(
     page_icon="📚",
     layout="wide",
 )
-
-st.title("📚 Adaptive Multimodal RAG")
-st.caption("Research paper assistant · 30 papers · Gemini 3.6 Flash")
 
 
 # ======================================================================
@@ -102,19 +106,22 @@ if not CHUNKS_PATH.exists() or not EMBEDDINGS_PATH.exists():
 
 
 # ======================================================================
-# Load
+# Load Resources
 # ======================================================================
 
 try:
-    hybrid, reranker, figures, web_search, num_chunks = load_everything()
+    hybrid, reranker, figures, web_search, num_chunks, citations = load_everything()
 except Exception as e:
     st.error(f"Failed to load resources: {e}")
     st.stop()
 
 
 # ======================================================================
-# Sidebar
+# Sidebar & Model Selection
 # ======================================================================
+
+default_backend = os.getenv("LLM_BACKEND", "gemini").lower().strip()
+default_ollama_model = os.getenv("OLLAMA_MODEL", "llama3.2-vision").strip()
 
 with st.sidebar:
     st.header("System Status")
@@ -127,6 +134,24 @@ with st.sidebar:
     st.write(f"**Web search:** {web_status}")
 
     st.divider()
+    st.header("LLM Backend")
+    backend_choice = st.radio(
+        "Select Model Provider",
+        options=["Gemini (Cloud)", "Ollama (Local)"],
+        index=0 if default_backend == "gemini" else 1,
+        help="Switch between Google Gemini API and local Ollama model"
+    )
+
+    if "Gemini" in backend_choice:
+        os.environ["LLM_BACKEND"] = "gemini"
+        model_display = "Gemini 3.5 Flash"
+    else:
+        os.environ["LLM_BACKEND"] = "ollama"
+        model_display = f"Ollama ({default_ollama_model})"
+
+    st.write(f"**Active Model:** `{model_display}`")
+
+    st.divider()
     st.header("Settings")
     top_k_retrieval = st.slider("Retrieval candidates", 10, 40, 20, 5)
     top_k_rerank    = st.slider("Chunks after reranking", 3, 10, 5, 1)
@@ -136,6 +161,14 @@ with st.sidebar:
 
     st.divider()
     st.caption("Adaptive Multimodal RAG · Plaksha University Capstone")
+
+
+# ======================================================================
+# Main Page Header (Dynamic)
+# ======================================================================
+
+st.title("📚 Adaptive Multimodal RAG")
+st.caption(f"Research paper assistant · 30 papers · {model_display}")
 
 
 # ======================================================================
@@ -221,7 +254,7 @@ if question := st.chat_input("Ask a question about the research papers..."):
                 final_chunks.extend(reranker.rerank(question, web_candidates, top_k=3))
 
         # ------------------------------------------------------------------
-        # Step 4: Show retrieved sources
+        # Step 4: Show retrieved sources (with per-source credibility)
         # ------------------------------------------------------------------
         if show_sources and final_chunks:
             with st.expander("📄 Retrieved Sources", expanded=False):
@@ -233,10 +266,24 @@ if question := st.chat_input("Ask a question about the research papers..."):
                         if "rerank_score" in chunk
                         else f"score: {chunk.get('score', 0):.3f}"
                     )
+
+                    if rtype == "web":
+                        cred_badge = "🌐 Web source"
+                    else:
+                        cred = get_paper_credibility(chunk["paper_title"], citations)
+                        if cred["found"]:
+                            cred_badge = (
+                                f"{cred['stars']} **{cred['citation_count']:,} citations** "
+                                f"({cred['year']}) · {cred['label']}"
+                            )
+                        else:
+                            cred_badge = f"{cred['stars']} Citations: not found"
+
                     st.markdown(
                         f"**{icon} Source {i}** — {chunk['paper_title']} "
                         f"(Page {chunk['page']}) · _{score_label}_"
                     )
+                    st.markdown(f"&nbsp;&nbsp;&nbsp;&nbsp;{cred_badge}")
                     st.caption(chunk["text"][:300] + ("..." if len(chunk["text"]) > 300 else ""))
                     st.divider()
 
@@ -285,13 +332,59 @@ if question := st.chat_input("Ask a question about the research papers..."):
 
         if used_web:
             st.info("🌐 Web search was used to supplement local research papers.")
-            
+
+        # ------------------------------------------------------------------
+        # Aggregate credibility score
+        # ------------------------------------------------------------------
+        agg = aggregate_credibility(final_chunks, citations)
+        score = agg["score"]
+
+        # colour the score card based on tier
+        if score >= 80:
+            score_color = "#1a7f37"   # green
+        elif score >= 60:
+            score_color = "#4a90e2"   # blue
+        elif score >= 40:
+            score_color = "#e6a817"   # amber
+        else:
+            score_color = "#888888"   # grey
+
+        local_note = (
+            f"{agg['n_scored']} local source{'s' if agg['n_scored'] != 1 else ''}"
+            + (f", {agg['n_web']} web source{'s' if agg['n_web'] != 1 else ''}" if agg["n_web"] else "")
+        )
+
+        st.markdown(
+            f"""
+<div style="
+    border: 1px solid {score_color};
+    border-radius: 8px;
+    padding: 10px 16px;
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: transparent;
+">
+    <div style="font-size: 1.6rem; color: {score_color}; font-weight: 700; min-width: 52px;">
+        {score:.0f}<span style="font-size:1rem;">/100</span>
+    </div>
+    <div>
+        <div style="font-size: 1rem; color: {score_color};">{agg['stars']}&nbsp; <strong>Source Credibility</strong></div>
+        <div style="font-size: 0.8rem; color: #888;">{agg['label']} · {local_note} · citation-weighted (OpenAlex)</div>
+    </div>
+</div>
+""",
+            unsafe_allow_html=True,
+        )
+
         # Add assistant response to chat history
         st.session_state.messages.append({
-            "role": "assistant",
-            "content": answer,
+            "role":        "assistant",
+            "content":     answer,
             "figure_path": str(figure_path) if figure_path else None,
-            "caption": caption,
-            "used_web": used_web
+            "caption":     caption,
+            "used_web":    used_web,
         })
+
 

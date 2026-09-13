@@ -23,22 +23,25 @@ import os
 import re
 
 from dotenv import load_dotenv
-from google import genai
 
 load_dotenv()
 
+LLM_BACKEND  = os.getenv("LLM_BACKEND", "gemini").lower().strip()
+OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "llama3.2-vision")
 
-API_KEY = os.getenv("GEMINI_API_KEY")
+# Gemini client — lazily initialised only when backend=gemini
+_gemini_client = None
+_GEMINI_MODEL  = "gemini-3.5-flash"
 
-if not API_KEY:
-    raise ValueError(
-        "GEMINI_API_KEY not found in environment. "
-        "Add it to your .env file."
-    )
-
-_client = genai.Client(api_key=API_KEY)
-
-MODEL_NAME = "gemini-3.6-flash"
+def _get_gemini_client():
+    global _gemini_client
+    if _gemini_client is None:
+        from google import genai
+        api_key = os.getenv("GEMINI_API_KEY")
+        if not api_key:
+            raise ValueError("GEMINI_API_KEY not found. Add it to your .env file.")
+        _gemini_client = genai.Client(api_key=api_key)
+    return _gemini_client
 
 
 # ------------------------------------------------------------------
@@ -54,7 +57,7 @@ VALID_INTENTS   = {
     "UNKNOWN",
 }
 
-VALID_SOURCES   = {"LOCAL", "WEB", "BOTH"}
+VALID_SOURCES    = {"LOCAL", "WEB", "BOTH"}
 VALID_MODALITIES = {"TEXT", "IMAGE", "TEXT_AND_IMAGE"}
 
 
@@ -96,10 +99,10 @@ TEXT_AND_IMAGE    - The answer benefits from both text and a figure.
 === RULES ===
 - Default to LOCAL unless there is a clear signal for WEB.
 - Questions with words like "latest", "current", "today", "now",
-  "price", "stock", "news", or specific recent years like "2025" or "2026" → WEB or BOTH.
+  "price", "stock", "news", or specific recent years like "2025" or "2026" -> WEB or BOTH.
 - If the user asks about a specific paper title that is clearly not one of the foundational LLM/RAG papers, or mentions a reproduction/analysis paper from 2025+, strongly prefer BOTH or WEB.
 - Questions about "Figure X", "the diagram in", "the graph shows",
-  "the architecture in" → FIGURE intent, IMAGE or TEXT_AND_IMAGE modality.
+  "the architecture in" -> FIGURE intent, IMAGE or TEXT_AND_IMAGE modality.
 - When in doubt, choose LOCAL / TEXT.
 
 === OUTPUT FORMAT ===
@@ -115,6 +118,30 @@ Return ONLY valid JSON, no markdown, no explanation:
 
 
 # ------------------------------------------------------------------
+# Backend-specific LLM call
+# ------------------------------------------------------------------
+
+def _call_llm(prompt: str) -> str:
+    """Send prompt to whichever LLM backend is configured."""
+    backend = os.getenv("LLM_BACKEND", "gemini").lower().strip()
+    if backend == "ollama":
+        import ollama
+        model = os.getenv("OLLAMA_MODEL", "llama3.2-vision").strip()
+        response = ollama.chat(
+            model=model,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        return response["message"]["content"]
+    else:
+        client = _get_gemini_client()
+        response = client.models.generate_content(
+            model=_GEMINI_MODEL,
+            contents=prompt,
+        )
+        return response.text
+
+
+# ------------------------------------------------------------------
 # Main classification function
 # ------------------------------------------------------------------
 
@@ -122,11 +149,8 @@ def classify_query(question: str) -> dict:
     """
     Classify a user question into routing decisions.
 
-    Returns a dict with keys:
-      intent, source, modality, reasoning
-
-    On any failure (API error, JSON parse error, invalid value),
-    returns a safe default routing to LOCAL / TEXT.
+    Returns a dict with keys: intent, source, modality, reasoning.
+    On any failure, returns a safe default routing to LOCAL / TEXT.
     """
 
     default = {
@@ -143,25 +167,17 @@ def classify_query(question: str) -> dict:
     )
 
     try:
-
-        response = _client.models.generate_content(
-            model=MODEL_NAME,
-            contents=prompt,
-        )
-
-        raw = response.text.strip()
+        raw = _call_llm(prompt).strip()
 
         # Strip any accidental markdown code fences
         raw = re.sub(r"^```[a-z]*\n?", "", raw)
         raw = re.sub(r"\n?```$",        "", raw)
         raw = raw.strip()
 
-        parsed = json.loads(raw)
-
-        # Validate and normalise
-        intent   = str(parsed.get("intent",   "LOCAL_FACT")).upper()
-        source   = str(parsed.get("source",   "LOCAL")).upper()
-        modality = str(parsed.get("modality", "TEXT")).upper()
+        parsed   = json.loads(raw)
+        intent   = str(parsed.get("intent",    "LOCAL_FACT")).upper()
+        source   = str(parsed.get("source",    "LOCAL")).upper()
+        modality = str(parsed.get("modality",  "TEXT")).upper()
         reasoning = str(parsed.get("reasoning", ""))
 
         if intent   not in VALID_INTENTS:    intent   = "LOCAL_FACT"

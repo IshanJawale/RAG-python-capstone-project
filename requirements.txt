@@ -15,4 +15,5 @@ ipykernel
 notebook
 Pillow
 torchvision
+ollama
 ipykernel

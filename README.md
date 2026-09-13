@@ -18,7 +18,7 @@ Unlike basic RAG systems that blindly fetch text from a single source, this syst
 | **Sparse Retrieval** | `rank-bm25` | Used in `src/retrieval.py` for exact keyword matching, running in parallel with the dense retriever (Hybrid Search). |
 | **Reranking** | `cross-encoder/ms-marco-MiniLM-L-6-v2` | Used in `src/reranking.py` to re-score the top hybrid retrieval results, significantly improving the precision of the retrieved context. |
 | **Web Search** | `Tavily` | Used in `src/web_search.py` as an external knowledge fallback for questions outside the corpus scope (like current events). |
-| **Language Model** | `gemini-3.6-flash` | Used in `src/routing.py` and `src/generation.py` for both classifying user intent and generating the final multimodal response. Selected for its speed and native multimodal (image + text) capabilities. |
+| **Language Model** | `gemini-3.5-flash` | Used in `src/routing.py` and `src/generation.py` for both classifying user intent and generating the final multimodal response. Selected for its speed and native multimodal (image + text) capabilities. |
 | **Web Interface** | `streamlit` | Used in `app/app.py` to provide a modern, conversational chatbot interface with persistent chat history. |
 
 ## How to Run It

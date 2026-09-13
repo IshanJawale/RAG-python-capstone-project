@@ -1,58 +1,55 @@
 """
 generation.py
 
-Gemini-based answer generation.
+Answer generation with a swappable LLM backend.
+
+Set LLM_BACKEND in your .env file:
+  LLM_BACKEND=gemini   → uses Gemini 3.5 Flash via Google GenAI SDK (default)
+  LLM_BACKEND=ollama   → uses a local Ollama model (e.g. llama3.2-vision, llava)
 
 Two generation modes:
   1. generate_answer(question, chunks)
        Standard text-only RAG answer from retrieved chunks.
-       Chunks may come from local retrieval or web search (or both).
-
   2. generate_answer_with_figure(question, text_chunks, figure_path, caption)
-       Multimodal answer: sends the question + retrieved text + figure image
-       + caption to Gemini for visual reasoning.
-
-Both functions include source citations (paper title + page) in the prompt
-and instruct the model to abstain rather than hallucinate.
+       Multimodal answer: sends question + text + figure image to the model.
 """
 
 import os
+import base64
 from pathlib import Path
 
 from dotenv import load_dotenv
-from google import genai
 
 load_dotenv()
 
+LLM_BACKEND  = os.getenv("LLM_BACKEND", "gemini").lower().strip()
+OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "llama3.2-vision")
 
-API_KEY = os.getenv("GEMINI_API_KEY")
+# Initialise the Gemini client only when needed
+_gemini_client = None
+_GEMINI_MODEL  = "gemini-3.5-flash"
 
-if not API_KEY:
-    raise ValueError(
-        "GEMINI_API_KEY not found. "
-        "Add it to your .env file."
-    )
-
-client     = genai.Client(api_key=API_KEY)
-MODEL_NAME = "gemini-2.0-flash-lite"  # fallback kept for reference
-MODEL_NAME = "gemini-3.6-flash"
+def _get_gemini_client():
+    global _gemini_client
+    if _gemini_client is None:
+        from google import genai
+        api_key = os.getenv("GEMINI_API_KEY")
+        if not api_key:
+            raise ValueError("GEMINI_API_KEY not found. Add it to your .env file.")
+        _gemini_client = genai.Client(api_key=api_key)
+    return _gemini_client
 
 
 # ======================================================================
-# Shared helpers
+# Shared prompt helpers
 # ======================================================================
 
 def _format_chunk(i: int, chunk: dict) -> str:
-    """Format a single chunk as a labelled evidence block."""
-
     source_label = chunk.get("paper_title", "Unknown")
     page_label   = chunk.get("page", "N/A")
-
-    # Web results include a URL instead of a page number
     if chunk.get("retrieval_type") == "web":
         source_label = chunk.get("paper_title", "Web Source")
         page_label   = chunk.get("url", "N/A")
-
     return (
         f"SOURCE {i}\n"
         f"Paper/Source : {source_label}\n"
@@ -62,13 +59,8 @@ def _format_chunk(i: int, chunk: dict) -> str:
 
 
 def _build_context(chunks: list[dict]) -> str:
-    parts = [_format_chunk(i, c) for i, c in enumerate(chunks, start=1)]
-    return "\n---\n".join(parts)
+    return "\n---\n".join(_format_chunk(i, c) for i, c in enumerate(chunks, start=1))
 
-
-# ======================================================================
-# 1. Text-only generation
-# ======================================================================
 
 _TEXT_PROMPT_TEMPLATE = """\
 You are a research-paper question-answering assistant.
@@ -94,49 +86,6 @@ RETRIEVED EVIDENCE:
 
 Provide a grounded, well-cited answer.
 """
-
-
-def build_prompt(question: str, retrieved_chunks: list[dict]) -> str:
-    context = _build_context(retrieved_chunks)
-    return _TEXT_PROMPT_TEMPLATE.format(
-        question=question,
-        context=context,
-    )
-
-
-def generate_answer(
-    question:         str,
-    retrieved_chunks: list[dict],
-) -> str:
-    """
-    Generate a text-only grounded answer from retrieved chunks.
-
-    Parameters
-    ----------
-    question         : user question string
-    retrieved_chunks : list of chunk dicts (local or web)
-
-    Returns
-    -------
-    Generated answer string (or error message on failure)
-    """
-
-    prompt = build_prompt(question, retrieved_chunks)
-
-    try:
-        response = client.models.generate_content(
-            model=MODEL_NAME,
-            contents=prompt,
-        )
-        return response.text
-
-    except Exception as e:
-        return f"[Generation error] {e}"
-
-
-# ======================================================================
-# 2. Multimodal generation (text + figure)
-# ======================================================================
 
 _MULTIMODAL_PROMPT_TEMPLATE = """\
 You are a research-paper question-answering assistant with vision capabilities.
@@ -164,75 +113,126 @@ Now provide a grounded answer that addresses both the text and the visual eviden
 """
 
 
+def build_prompt(question: str, retrieved_chunks: list[dict]) -> str:
+    return _TEXT_PROMPT_TEMPLATE.format(
+        question=question,
+        context=_build_context(retrieved_chunks),
+    )
+
+
+# ======================================================================
+# 1. Text-only generation
+# ======================================================================
+
+def _generate_text_gemini(prompt: str) -> str:
+    client = _get_gemini_client()
+    response = client.models.generate_content(
+        model=_GEMINI_MODEL,
+        contents=prompt,
+    )
+    return response.text
+
+
+def _generate_text_ollama(prompt: str) -> str:
+    import ollama
+    model = os.getenv("OLLAMA_MODEL", "llama3.2-vision").strip()
+    response = ollama.chat(
+        model=model,
+        messages=[{"role": "user", "content": prompt}],
+    )
+    return response["message"]["content"]
+
+
+def generate_answer(question: str, retrieved_chunks: list[dict]) -> str:
+    """Generate a text-only grounded answer from retrieved chunks."""
+    prompt = build_prompt(question, retrieved_chunks)
+    backend = os.getenv("LLM_BACKEND", "gemini").lower().strip()
+    try:
+        if backend == "ollama":
+            return _generate_text_ollama(prompt)
+        return _generate_text_gemini(prompt)
+    except Exception as e:
+        return f"[Generation error] {e}"
+
+
+# ======================================================================
+# 2. Multimodal generation (text + figure)
+# ======================================================================
+
+def _generate_multimodal_gemini(
+    prompt_text: str,
+    image_bytes: bytes,
+    mime_type:   str,
+) -> str:
+    client = _get_gemini_client()
+    image_part = {
+        "inline_data": {
+            "mime_type": mime_type,
+            "data":      image_bytes,
+        }
+    }
+    response = client.models.generate_content(
+        model=_GEMINI_MODEL,
+        contents=[prompt_text, image_part],
+    )
+    return response.text
+
+
+def _generate_multimodal_ollama(
+    prompt_text: str,
+    figure_path: Path,
+) -> str:
+    import ollama
+    model = os.getenv("OLLAMA_MODEL", "llama3.2-vision").strip()
+    # Ollama accepts image paths directly in the messages list
+    response = ollama.chat(
+        model=model,
+        messages=[{
+            "role":    "user",
+            "content": prompt_text,
+            "images":  [str(figure_path)],
+        }],
+    )
+    return response["message"]["content"]
+
+
 def generate_answer_with_figure(
     question:    str,
     text_chunks: list[dict],
     figure_path: str | Path,
     caption:     str = "",
 ) -> str:
-    """
-    Generate a multimodal answer using text chunks + a figure image.
-
-    Parameters
-    ----------
-    question    : user question string
-    text_chunks : list of chunk dicts for text context
-    figure_path : path to the figure image file (PNG, JPG, JPEG)
-    caption     : figure caption string (empty string if unavailable)
-
-    Returns
-    -------
-    Generated answer string (or error message on failure)
-    """
-
+    """Generate a multimodal answer using text chunks + a figure image."""
     figure_path = Path(figure_path)
 
     if not figure_path.exists():
-        # Fall back to text-only if figure file is missing
         print(f"[Generation] Figure not found at {figure_path} — falling back to text-only.")
         return generate_answer(question, text_chunks)
 
-    context = _build_context(text_chunks) if text_chunks else "(No text evidence retrieved.)"
-    caption = caption or "(No caption available.)"
-
+    context     = _build_context(text_chunks) if text_chunks else "(No text evidence retrieved.)"
+    caption     = caption or "(No caption available.)"
     prompt_text = _MULTIMODAL_PROMPT_TEMPLATE.format(
         question=question,
         caption=caption,
         context=context,
     )
 
-    # Read image bytes
+    backend = os.getenv("LLM_BACKEND", "gemini").lower().strip()
     try:
-        image_bytes = figure_path.read_bytes()
-    except Exception as e:
-        print(f"[Generation] Could not read figure file: {e} — falling back to text-only.")
-        return generate_answer(question, text_chunks)
+        if backend == "ollama":
+            return _generate_multimodal_ollama(prompt_text, figure_path)
 
-    # Detect MIME type from extension
-    ext_to_mime = {
-        ".png":  "image/png",
-        ".jpg":  "image/jpeg",
-        ".jpeg": "image/jpeg",
-        ".gif":  "image/gif",
-        ".webp": "image/webp",
-    }
-    mime_type = ext_to_mime.get(figure_path.suffix.lower(), "image/png")
-
-    try:
-        # Gemini multimodal input: list of [text, image_part]
-        image_part = {
-            "inline_data": {
-                "mime_type": mime_type,
-                "data":      image_bytes,
-            }
+        # Gemini: needs image bytes
+        ext_to_mime = {
+            ".png":  "image/png",
+            ".jpg":  "image/jpeg",
+            ".jpeg": "image/jpeg",
+            ".gif":  "image/gif",
+            ".webp": "image/webp",
         }
-
-        response = client.models.generate_content(
-            model=MODEL_NAME,
-            contents=[prompt_text, image_part],
-        )
-
-        return response.text
+        mime_type   = ext_to_mime.get(figure_path.suffix.lower(), "image/png")
+        image_bytes = figure_path.read_bytes()
+        return _generate_multimodal_gemini(prompt_text, image_bytes, mime_type)
 
     except Exception as e:
         print(f"[Generation] Multimodal generation failed ({e}) — falling back to text-only.")

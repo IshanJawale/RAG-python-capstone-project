@@ -3,7 +3,7 @@
 ## What I Did
 - I developed a complete Multimodal RAG pipeline designed to answer complex questions over a local corpus of 30 AI/ML research papers.
 - I implemented a robust **Hybrid Retrieval** system that combines dense vector search (using `sentence-transformers` and NumPy) with sparse lexical search (`rank-bm25`) to maximize recall. I then added an MS-MARCO Cross-Encoder to strictly rerank the top results for high precision.
-- I built an **LLM Router** (using Gemini 3.6 Flash) that analyzes the user's question upfront to decide the optimal data source. It intelligently routes queries to the local corpus, a live web search (via Tavily), or both.
+- I built an **LLM Router** (using Gemini 3.5 Flash) that analyzes the user's question upfront to decide the optimal data source. It intelligently routes queries to the local corpus, a live web search (via Tavily), or both.
 - I designed a custom **Multimodal Figure Retrieval** system. The system extracts diagrams from PDFs and matches them to the user's query using the context of the retrieved text chunks. If a relevant diagram is found, it is fed directly into Gemini alongside the text for true multimodal generation.
 - I deployed the entire system into a modern, conversational **Streamlit chatbot interface** with persistent message history.
 - I established a rigorous **Jupyter Notebook evaluation suite** to systematically test and plot retrieval metrics (Recall@K, MRR), chunking distributions, routing accuracy, and answer quality.

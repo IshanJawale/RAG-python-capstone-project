@@ -269,9 +269,6 @@ Implemented a fallback renderer:
 
 **Result:** 285 vector diagrams extracted that would otherwise be lost.
 
-**Example — CRAG Inference Architecture (Page 4):**
-
-![CRAG Architecture Diagram](data/figures/Corrective%20Retrieval%20Augmented%20Generation_page_4_rendered_fig2.png)
 
 ---
 ---

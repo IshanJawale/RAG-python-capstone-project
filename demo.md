@@ -269,6 +269,9 @@ Implemented a fallback renderer:
 
 **Result:** 285 vector diagrams extracted that would otherwise be lost.
 
+**Example — CRAG Inference Architecture (Page 4):**
+
+![CRAG Architecture Diagram](data/figures/Corrective%20Retrieval%20Augmented%20Generation_page_4_rendered_fig2.png)
 
 ---
 ---
@@ -277,66 +280,86 @@ Implemented a fallback renderer:
 
 ---
 
-## The Biggest Architectural Mistake
+## 1. The Core Architectural Flaw: Text-Based Image Retrieval
 
-Figure retrieval is **tightly coupled to text retrieval**.
+The biggest limitation of this system is that **it uses text metadata to retrieve images, rather than visual understanding**.
 
-The current flow:
+### How Image Retrieval Currently Works:
+Image retrieval currently searches `data/figures.json`—a pure text database of captions and paper titles:
+1. It looks at the top-ranked *text chunks* and awards a paper bonus (+30 pts) to figures from that paper.
+2. It matches words between the user query and the *figure caption* (+3 pts per word).
+3. The image pixels themselves are **never searched or embedded**. The system only opens the image at the very end when sending it to Gemini.
+
 ```
-User Query → Hybrid Text Search → Top Chunks → Identify Paper → Find Figures from that Paper
+Current Flow:
+User Query ──(Text Search)──► Top Text Chunks ──(Paper ID)──► Caption Match in figures.json ──► Pick Figure
+                                                                ▲
+                                            No visual understanding here!
 ```
 
-The system can only find a figure *if the text retriever first finds a relevant passage from the same paper*. No independent visual search exists.
+### Why Text-Based Image Retrieval Fails:
+1. **Captions don't describe visual content:** Academic captions are notoriously brief (e.g., *"Figure 1: System overview"* or *"Figure 4: Ablation results"*). They rarely describe what is actually drawn (e.g., *"flowchart with feedback loop"*, *"attention heatmaps"*, or *"bar chart comparing latency"*).
+2. **Visual queries fail:** If a user asks *"Show me the flowchart comparing retriever vs generator"* or *"Show me the loss curve graph"*, caption matching fails because the visual descriptors (*"flowchart"*, *"loss curve"*) do not appear in the text.
+3. **Images are treated as second-class attachments** to text chunks, rather than first-class retrievable knowledge.
 
-### The Bug This Caused
+---
 
-During testing, query: *"Tell me about the Mahabharata."*
+## 2. The Symptom: The "Forced Retrieval" Bug
 
-The dense retriever was forced to return *something* — it pulled a low-scoring passage from the GPT-3 paper. The figure retriever saw GPT-3 at Rank 1 and confidently served a GPT-3 few-shot learning diagram as a response to a question about an ancient epic.
+Because image search was piggybacked onto text chunks, it created an ugly engineering bug during testing:
 
-**The patch** (heuristics, not a principled solution):
+* **Query:** *"Tell me about the Mahabharata."* (An off-topic query with zero relevant papers).
+* **The Failure:** Dense text retrieval was mathematically forced to return the closest vector (a weak passage from GPT-3). The figure retriever saw GPT-3 at Rank 1, awarded it a massive +30 paper bonus, and confidently surfaced a **GPT-3 Few-Shot Learning diagram** for a question about an ancient epic.
+
+### Our Temporary Patch (Heuristics):
+We patched this symptom using Cross-Encoder score gating:
 
 ```python
-# In src/figures.py
+# In src/figures.py — heuristics to suppress forced false-positive images
 for rank, chunk in enumerate(chunks):
-    # Discard chunks the cross-encoder found irrelevant (logit < 0)
+    # If the cross-encoder deemed the text chunk irrelevant (logit < 0), drop paper bonus
     if chunk.get("rerank_score", 1.0) < 0.0:
-        continue   # ← prevents irrelevant papers from getting figure bonus
+        continue
 
-# Minimum absolute threshold
+# If the best candidate figure scores below 10, return nothing
 if best_figure_score < 10:
-    return []      # ← return nothing rather than hallucinate a random image
+    return []
 ```
+
+> **The Insight:** This patch stopped the symptom, but it didn't cure the disease. The root cause is that **we used text to search for images**.
 
 ---
 
-## What I Would Do Differently
+## 3. What I Would Do Differently: Native Visual Embeddings (CLIP / ColPali)
 
-### ① Native Multimodal Figure Embedding (CLIP / ColPali)
+Instead of searching captions in `figures.json`, the principled solution is **true multimodal retrieval**:
 
-Embed each extracted figure image directly using a vision-language model into a dedicated image vector store. Query it in parallel with text retrieval.
+1. **Offline Ingestion:** Pass each extracted diagram through a vision-language embedding model (**CLIP** or **ColPali**) to encode the actual image pixels into an image vector space.
+2. **Online Query:** Run parallel, decoupled retrievers:
+   - User query $\rightarrow$ **Text Vector Search** $\rightarrow$ Top 5 text passages.
+   - User query $\rightarrow$ **Image Vector Search** $\rightarrow$ Top diagram (matched on visual semantics).
+3. **Fuse at Generation:** Send both the best text chunks and the best visual diagram to the multimodal LLM.
 
 ```
-User Query → [Text Vector Search]   → Top Text Chunks
-           → [Image Vector Search]  → Top Figures (semantically matched by visual content)
-                                         ↓
-                               Fuse and send to LLM
+Principled Multimodal Flow:
+                            ┌──► Text Embeddings ──► Top Text Chunks ──┐
+                            │                                          │
+User Query ──► Joint Model ─┤                                          ├──► Multimodal LLM (Gemini)
+                            │                                          │
+                            └──► Image Embeddings ─► Top Figure ───────┘
+                                 (Searches pixels, not captions!)
 ```
 
-This completely decouples figure retrieval from text retrieval. A question about *"the attention heatmap in Transformer papers"* would match the diagram visually — no text needed.
+### Why This is Better:
+- **Visual understanding:** Queries like *"Show me the transformer encoder-decoder flowchart"* will match the visual structure of the diagram itself, even if the caption is just *"Figure 1"*.
+- **Completely decoupled:** An off-topic question simply gets a low cosine similarity in *both* vector spaces, naturally returning no image without needing artificial score thresholds.
 
 ---
 
-### ② GraphRAG for Cross-Paper Synthesis
+## 4. Other Future Directions
 
-Right now, multi-paper comparisons retrieve chunks independently and ask the LLM to synthesise. Works for simple comparisons, breaks on subtle inter-paper relationships.
+### GraphRAG for Cross-Paper Synthesis
+Currently, multi-paper comparison queries retrieve text chunks independently and ask the LLM to synthesize them. A **GraphRAG** layer would build a concept-and-citation knowledge graph at ingestion time, allowing the system to follow edges across papers (e.g., *Self-RAG builds upon Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks*).
 
-A **GraphRAG** layer would build an entity-relationship graph at ingestion time — linking papers by shared concepts, citations, and contradicting claims — enabling relational traversal across the corpus.
-
----
-
-### ③ Fully Quantized Edge Deployment
-
-Currently relies on cloud APIs (Gemini) for multimodal generation.
-
-In the future, deploying a local vision model (e.g., `llama3.2-vision`) via **llama.cpp** with 4-bit quantization could run the entire pipeline air-gapped at under 5 seconds on a consumer laptop — privacy-preserving and deployable in enterprise settings where sending research documents externally is not permitted.
+### Fully Quantized Edge Deployment
+Deploying a local multimodal model (like `llama3.2-vision`) via **llama.cpp** with 4-bit quantization could bring the entire multimodal pipeline offline at sub-5 second latencies—enabling completely private, air-gapped research assistance.

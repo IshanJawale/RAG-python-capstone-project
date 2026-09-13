@@ -1,6 +1,8 @@
 # Adaptive Multimodal RAG for Research Papers
 ### Ishan Jawale · Plaksha University Capstone 2026
 
+🎥 **Watch the Demo Video:** [https://youtu.be/pvTlhTps3wo](https://youtu.be/pvTlhTps3wo)
+
 An advanced, multimodal Retrieval-Augmented Generation (RAG) system designed to answer complex questions about AI/ML research papers. 
 
 Unlike basic RAG systems that blindly fetch text from a single source, this system is **adaptive and multimodal**:

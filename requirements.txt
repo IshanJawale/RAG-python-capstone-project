@@ -80,7 +80,6 @@ nltk==3.10.3
 notebook==7.6.2
 notebook_shim==0.2.4
 numpy==2.5.3
-ollama==0.6.2
 packaging==26.3
 pandas==3.0.5
 pandocfilters==1.5.1

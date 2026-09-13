@@ -1,11 +1,7 @@
 """
 generation.py
 
-Answer generation with a swappable LLM backend.
-
-Set LLM_BACKEND in your .env file:
-  LLM_BACKEND=gemini   → uses Gemini 3.5 Flash via Google GenAI SDK (default)
-  LLM_BACKEND=ollama   → uses a local Ollama model (e.g. llama3.2-vision, llava)
+Answer generation with Gemini.
 
 Two generation modes:
   1. generate_answer(question, chunks)
@@ -21,9 +17,6 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 load_dotenv()
-
-LLM_BACKEND  = os.getenv("LLM_BACKEND", "gemini").lower().strip()
-OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "llama3.2-vision")
 
 # Initialise the Gemini client only when needed
 _gemini_client = None
@@ -133,23 +126,10 @@ def _generate_text_gemini(prompt: str) -> str:
     return response.text
 
 
-def _generate_text_ollama(prompt: str) -> str:
-    import ollama
-    model = os.getenv("OLLAMA_MODEL", "llama3.2-vision").strip()
-    response = ollama.chat(
-        model=model,
-        messages=[{"role": "user", "content": prompt}],
-    )
-    return response["message"]["content"]
-
-
 def generate_answer(question: str, retrieved_chunks: list[dict]) -> str:
     """Generate a text-only grounded answer from retrieved chunks."""
     prompt = build_prompt(question, retrieved_chunks)
-    backend = os.getenv("LLM_BACKEND", "gemini").lower().strip()
     try:
-        if backend == "ollama":
-            return _generate_text_ollama(prompt)
         return _generate_text_gemini(prompt)
     except Exception as e:
         return f"[Generation error] {e}"
@@ -178,24 +158,6 @@ def _generate_multimodal_gemini(
     return response.text
 
 
-def _generate_multimodal_ollama(
-    prompt_text: str,
-    figure_path: Path,
-) -> str:
-    import ollama
-    model = os.getenv("OLLAMA_MODEL", "llama3.2-vision").strip()
-    # Ollama accepts image paths directly in the messages list
-    response = ollama.chat(
-        model=model,
-        messages=[{
-            "role":    "user",
-            "content": prompt_text,
-            "images":  [str(figure_path)],
-        }],
-    )
-    return response["message"]["content"]
-
-
 def generate_answer_with_figure(
     question:    str,
     text_chunks: list[dict],
@@ -217,11 +179,7 @@ def generate_answer_with_figure(
         context=context,
     )
 
-    backend = os.getenv("LLM_BACKEND", "gemini").lower().strip()
     try:
-        if backend == "ollama":
-            return _generate_multimodal_ollama(prompt_text, figure_path)
-
         # Gemini: needs image bytes
         ext_to_mime = {
             ".png":  "image/png",

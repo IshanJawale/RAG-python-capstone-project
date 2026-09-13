@@ -26,9 +26,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-LLM_BACKEND  = os.getenv("LLM_BACKEND", "gemini").lower().strip()
-OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "llama3.2-vision")
-
 # Gemini client — lazily initialised only when backend=gemini
 _gemini_client = None
 _GEMINI_MODEL  = "gemini-3.5-flash"
@@ -122,23 +119,13 @@ Return ONLY valid JSON, no markdown, no explanation:
 # ------------------------------------------------------------------
 
 def _call_llm(prompt: str) -> str:
-    """Send prompt to whichever LLM backend is configured."""
-    backend = os.getenv("LLM_BACKEND", "gemini").lower().strip()
-    if backend == "ollama":
-        import ollama
-        model = os.getenv("OLLAMA_MODEL", "llama3.2-vision").strip()
-        response = ollama.chat(
-            model=model,
-            messages=[{"role": "user", "content": prompt}],
-        )
-        return response["message"]["content"]
-    else:
-        client = _get_gemini_client()
-        response = client.models.generate_content(
-            model=_GEMINI_MODEL,
-            contents=prompt,
-        )
-        return response.text
+    """Send prompt to Gemini."""
+    client = _get_gemini_client()
+    response = client.models.generate_content(
+        model=_GEMINI_MODEL,
+        contents=prompt,
+    )
+    return response.text
 
 
 # ------------------------------------------------------------------

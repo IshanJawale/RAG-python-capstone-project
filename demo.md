@@ -141,6 +141,6 @@ A **GraphRAG** layer would build an entity-relationship graph at ingestion time 
 
 ### ③ Fully Quantized Edge Deployment
 
-The Ollama toggle I implemented already allows running `llama3.2-vision` locally. But on a laptop CPU, multimodal inference currently takes 15–25 seconds per response.
+Currently, the system relies on cloud APIs (Gemini) for high-speed multimodal generation.
 
-Using **llama.cpp** with 4-bit quantization, the same model could realistically run at under 5 seconds on a consumer laptop — making the entire multimodal pipeline fully air-gapped, privacy-preserving, and deployable in academic or enterprise settings where sending research documents to external APIs is not permitted.
+In the future, deploying a local vision model (e.g., `llama3.2-vision`) via **llama.cpp** with 4-bit quantization could run the entire multimodal pipeline air-gapped at under 5 seconds on a consumer laptop. This makes the system privacy-preserving and deployable in enterprise settings where sending documents externally is not permitted.

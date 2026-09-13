@@ -120,9 +120,6 @@ except Exception as e:
 # Sidebar & Model Selection
 # ======================================================================
 
-default_backend = os.getenv("LLM_BACKEND", "gemini").lower().strip()
-default_ollama_model = os.getenv("OLLAMA_MODEL", "llama3.2-vision").strip()
-
 with st.sidebar:
     st.header("System Status")
     st.metric("Chunks indexed", num_chunks)
@@ -135,21 +132,7 @@ with st.sidebar:
 
     st.divider()
     st.header("LLM Backend")
-    backend_choice = st.radio(
-        "Select Model Provider",
-        options=["Gemini (Cloud)", "Ollama (Local)"],
-        index=0 if default_backend == "gemini" else 1,
-        help="Switch between Google Gemini API and local Ollama model"
-    )
-
-    if "Gemini" in backend_choice:
-        os.environ["LLM_BACKEND"] = "gemini"
-        model_display = "Gemini 3.5 Flash"
-    else:
-        os.environ["LLM_BACKEND"] = "ollama"
-        model_display = f"Ollama ({default_ollama_model})"
-
-    st.write(f"**Active Model:** `{model_display}`")
+    st.write("**Active Model:** `Gemini 3.5 Flash`")
 
     st.divider()
     st.header("Settings")
@@ -164,11 +147,11 @@ with st.sidebar:
 
 
 # ======================================================================
-# Main Page Header (Dynamic)
+# Header
 # ======================================================================
 
 st.title("📚 Adaptive Multimodal RAG")
-st.caption(f"Research paper assistant · 30 papers · {model_display}")
+st.caption("Research paper assistant · 30 papers · Gemini 3.5 Flash")
 
 
 # ======================================================================

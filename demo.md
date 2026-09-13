@@ -219,7 +219,7 @@ def aggregate_credibility(chunks, citations):
 
 Naive word-count splitting severs sentences mid-way, breaking formulae and citations across chunk boundaries. Switched to **NLTK sentence-aware chunking** with a 600-word target and a 100-word overlap.
 
-The result is a clean, bell-shaped distribution — no extreme outliers, no truncated equations, no split references.
+The result is a strictly bounded distribution with a 600-word ceiling (mean: 417 words) — most chunks fill the target 550–600 word window, while the left tail cleanly captures natural section ends (like abstracts and conclusions) without mid-sentence truncations.
 
 ![Chunk Distribution](notebooks/chunk_distribution.png)
 

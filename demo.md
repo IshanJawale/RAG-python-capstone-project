@@ -356,10 +356,28 @@ User Query ──► Joint Model ─┤                                         
 
 ---
 
-## 4. Other Future Directions
+## 4. Future Roadmap & Key Enhancements
 
-### GraphRAG for Cross-Paper Synthesis
-Currently, multi-paper comparison queries retrieve text chunks independently and ask the LLM to synthesize them. A **GraphRAG** layer would build a concept-and-citation knowledge graph at ingestion time, allowing the system to follow edges across papers (e.g., *Self-RAG builds upon Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks*).
+### ① Native Multimodal Retrieval (Fixing Text-Based Image Search)
+Replace caption-keyword search with **ColPali** or **CLIP** embeddings. Directly encode PDF figure pixels into an image vector store so that diagrams are retrieved by visual semantics (flowcharts, architecture blocks, curves) rather than incomplete text captions.
 
-### Fully Quantized Edge Deployment
-Deploying a local multimodal model (like `llama3.2-vision`) via **llama.cpp** with 4-bit quantization could bring the entire multimodal pipeline offline at sub-5 second latencies—enabling completely private, air-gapped research assistance.
+### ② Multi-Turn Conversation History for Context
+Currently, each query is processed independently in a single turn. Adding conversation memory with conversational query reformulation (condensing conversation history into a contextualized search query) will allow natural research follow-ups, such as:
+* *"Can you explain the feedback loop in that diagram?"*
+* *"How does its loss function compare to the first paper you mentioned?"*
+
+### ③ Agentic Query Reformulation & Corrective Retrieval
+Allow the system to dynamically recognize weak retrieval instead of a one-shot pass:
+* If reranker logits indicate marginal or ambiguous relevance, an agentic loop critiques the retrieved chunks.
+* The system actively **reformulates the query** into alternative keywords, decomposes complex questions into sub-queries, and executes an iterative second retrieval pass (inspired by CRAG).
+
+### ④ Self-Evaluating RAG (Hallucination Verification Loop)
+Implement an automated critique layer before presenting answers to the user (inspired by *Self-RAG* and *Chain-of-Verification*):
+* Every generated claim is broken down and verified against the retrieved evidence chunks.
+* If a claim is unsupported or contradicts the text/figure, the self-evaluator either rejects the claim, flags it with an epistemic confidence warning, or triggers targeted retrieval to confirm it.
+
+### ⑤ GraphRAG for Cross-Paper Comparative Synthesis
+Construct an entity-relationship knowledge graph across all ingested papers at ingestion time. This captures citation networks, shared benchmarks, and methodology families, enabling deep comparative analysis across multiple papers.
+
+### ⑥ Fully Quantized Air-Gapped Edge Deployment
+Deploy local multimodal models (such as `llama3.2-vision`) via **llama.cpp** with 4-bit quantization to achieve sub-5-second local inference—offering privacy-preserving, offline research assistance for proprietary or embargoed documents.
